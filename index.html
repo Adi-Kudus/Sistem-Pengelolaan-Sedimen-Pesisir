@@ -58,9 +58,10 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.4); border-radius: 4px; }
         
         .custom-tooltip {
-            background: var(--tooltip-bg) !important; border: 2px solid var(--tooltip-border) !important;
-            color: var(--tooltip-text) !important; border-radius: 8px !important; padding: 8px 12px !important;
-            font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important;
+            background: var(--tooltip-bg) !important; border: 1px solid var(--tooltip-border) !important;
+            color: var(--tooltip-text) !important; border-radius: 6px !important; padding: 4px 8px !important;
+            font-family: 'JetBrains Mono', monospace !important; font-size: 10px !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important; white-space: nowrap !important;
         }
 
         .leaflet-popup-content-wrapper { background: transparent !important; padding:0 !important; box-shadow: none !important;}
@@ -492,60 +493,89 @@
 
     <!-- CLIMATE (MONSOON/ENSO) MODAL -->
     <div id="climateModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-slate-900 border-2 border-teal-500 rounded-2xl w-full max-w-4xl p-0 relative shadow-[0_0_40px_rgba(20,184,166,0.5)] overflow-hidden flex flex-col h-[85vh]">
-            <div class="bg-slate-950 p-4 border-b border-teal-900 flex justify-between items-center">
-                <h3 class="text-teal-400 font-black font-tech text-base md:text-lg uppercase tracking-widest"><i class="fa-solid fa-cloud-sun-rain"></i> Prediksi Angin Muson & ENSO</h3>
-                <button onclick="closeClimateModal()" class="text-slate-400 hover:text-red-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-slate-900 border-2 border-teal-500 rounded-2xl w-full max-w-4xl p-0 relative shadow-[0_0_40px_rgba(20,184,166,0.6)] overflow-hidden flex flex-col h-[85vh] transition-all">
+            <div class="bg-slate-950 p-4 border-b border-teal-900 flex justify-between items-center shadow-md z-10">
+                <h3 class="text-teal-400 font-black font-tech text-base md:text-lg uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-sun-rain animate-bounce"></i> Prediksi Angin Muson & ENSO
+                </h3>
+                <button onclick="closeClimateModal()" class="text-slate-400 hover:text-red-400 text-xl cursor-pointer transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar space-y-6">
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar space-y-6 relative">
+                <!-- Background visual noise/grid opsional -->
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-30 pointer-events-none"></div>
+
                 <!-- ENSO Status -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-gradient-to-br from-rose-950/60 to-orange-950/60 border border-rose-500 p-4 rounded-xl shadow-lg relative overflow-hidden">
-                        <i class="fa-solid fa-fire absolute -bottom-4 -right-4 text-8xl text-rose-500/20"></i>
-                        <h4 class="text-rose-400 font-bold font-mono text-sm mb-2">STATUS EL NIÑO (ENSO Positif)</h4>
-                        <div class="text-3xl font-black text-white font-tech mb-1">ONI: +1.2 <span class="text-sm font-sans font-normal text-rose-300">(Moderate)</span></div>
-                        <p class="text-xs text-slate-300 leading-relaxed text-justify relative z-10">Pemanasan suhu muka laut di Samudra Pasifik ekuator. Berpotensi menurunkan curah hujan di wilayah pesisir Demak, meningkatkan salinitas muara, dan memicu kekeringan yang berdampak pada siklus panen tambak.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                    <div class="bg-gradient-to-br from-rose-950/80 to-orange-900/60 border-2 border-rose-500/80 p-5 rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] transition-all relative overflow-hidden group">
+                        <i class="fa-solid fa-fire absolute -bottom-4 -right-4 text-8xl text-rose-500/20 group-hover:text-rose-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                        <h4 class="text-rose-400 font-bold font-mono text-sm mb-2 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> STATUS EL NIÑO (ENSO Positif)</h4>
+                        <div class="text-3xl font-black text-white font-tech mb-2 drop-shadow-[0_0_10px_rgba(244,63,94,0.8)]">ONI: +1.2 <span class="text-sm font-sans font-normal text-rose-300">(Moderate)</span></div>
+                        <p class="text-xs text-slate-200 leading-relaxed text-justify relative z-10 bg-black/30 p-2 rounded border border-rose-900/50">Pemanasan suhu muka laut di Samudra Pasifik ekuator. Berpotensi menurunkan curah hujan di wilayah pesisir, meningkatkan salinitas muara, dan memicu kekeringan lahan.</p>
                     </div>
-                    <div class="bg-gradient-to-br from-blue-950/60 to-cyan-950/60 border border-blue-500 p-4 rounded-xl shadow-lg relative overflow-hidden">
-                        <i class="fa-solid fa-cloud-showers-heavy absolute -bottom-4 -right-4 text-8xl text-blue-500/20"></i>
-                        <h4 class="text-blue-400 font-bold font-mono text-sm mb-2">STATUS LA NIÑA (ENSO Negatif)</h4>
-                        <div class="text-3xl font-black text-white font-tech mb-1">ONI: -0.8 <span class="text-sm font-sans font-normal text-blue-300">(Weak)</span></div>
-                        <p class="text-xs text-slate-300 leading-relaxed text-justify relative z-10">Pendinginan suhu muka laut yang memicu curah hujan ekstrem. Meningkatkan debit inflow Sungai Tuntang, mempercepat laju sedimentasi pesisir, dan mempertinggi risiko banjir rob di kawasan Sayung.</p>
+                    
+                    <div class="bg-gradient-to-br from-blue-950/80 to-cyan-900/60 border-2 border-blue-500/80 p-5 rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all relative overflow-hidden group">
+                        <i class="fa-solid fa-cloud-showers-heavy absolute -bottom-4 -right-4 text-8xl text-blue-500/20 group-hover:text-blue-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                        <h4 class="text-blue-400 font-bold font-mono text-sm mb-2 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> STATUS LA NIÑA (ENSO Negatif)</h4>
+                        <div class="text-3xl font-black text-white font-tech mb-2 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">ONI: -0.8 <span class="text-sm font-sans font-normal text-blue-300">(Weak)</span></div>
+                        <p class="text-xs text-slate-200 leading-relaxed text-justify relative z-10 bg-black/30 p-2 rounded border border-blue-900/50">Pendinginan suhu muka laut yang memicu curah hujan ekstrem. Meningkatkan debit inflow sungai, mempercepat laju sedimentasi pesisir, dan mempertinggi risiko banjir rob.</p>
                     </div>
                 </div>
                 
                 <!-- Muson Simulation -->
-                <div class="bg-slate-950 border border-slate-700 rounded-xl p-4 shadow-inner">
-                    <h4 class="text-emerald-400 font-bold font-mono text-sm mb-3 border-b border-slate-800 pb-2"><i class="fa-solid fa-wind"></i> Siklus Angin Muson Indonesia</h4>
+                <div class="bg-slate-950 border-2 border-slate-700 rounded-xl p-5 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] relative z-10">
+                    <h4 class="text-emerald-400 font-bold font-mono text-sm mb-4 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-wind animate-pulse text-teal-400"></i> Siklus Angin Muson Indonesia
+                    </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                         <div class="space-y-4">
-                            <div class="p-3 bg-slate-900 border border-slate-700 rounded-lg hover:border-emerald-500 transition-colors">
-                                <h5 class="text-emerald-300 font-bold text-xs mb-1">Muson Barat (Okt - Apr)</h5>
-                                <p class="text-[11px] text-slate-400 text-justify">Angin bergerak dari Benua Asia ke Australia membawa uap air tinggi. Memperkuat arus laut yang membawa sedimen ke arah Timur. Risiko abrasi tinggi pada pesisir yang menghadap Barat Laut.</p>
+                            <div class="p-3.5 bg-slate-900 border border-slate-700 rounded-lg hover:border-emerald-500 transition-colors shadow-md relative overflow-hidden">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500"></div>
+                                <h5 class="text-emerald-300 font-bold text-xs mb-1.5 pl-2">Muson Barat (Okt - Apr)</h5>
+                                <p class="text-[11px] text-slate-400 text-justify pl-2">Angin bergerak dari Benua Asia ke Australia membawa uap air tinggi. Memperkuat arus laut yang membawa sedimen ke arah Timur. Risiko abrasi tinggi pada area Barat Laut.</p>
                             </div>
-                            <div class="p-3 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 transition-colors">
-                                <h5 class="text-amber-300 font-bold text-xs mb-1">Muson Timur (Apr - Okt)</h5>
-                                <p class="text-[11px] text-slate-400 text-justify">Angin kering dari Australia ke Asia. Arus laut dominan ke arah Barat. Konsentrasi sedimen cenderung mengendap di muara sungai karena energi gelombang yang relatif lebih tenang.</p>
+                            <div class="p-3.5 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 transition-colors shadow-md relative overflow-hidden">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
+                                <h5 class="text-amber-300 font-bold text-xs mb-1.5 pl-2">Muson Timur (Apr - Okt)</h5>
+                                <p class="text-[11px] text-slate-400 text-justify pl-2">Angin kering dari Australia ke Asia. Arus laut dominan ke arah Barat. Konsentrasi sedimen cenderung mengendap di muara sungai akibat gelombang tenang.</p>
                             </div>
                         </div>
-                        <!-- Animasi Peta Muson Sederhana -->
-                        <div class="h-48 bg-slate-900 rounded-lg border border-slate-700 flex flex-col items-center justify-center relative overflow-hidden">
-                            <!-- Background Map (menggunakan fallback gradient jika gambar lambat) -->
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-cyan-900 opacity-50"></div>
+                        
+                        <!-- Animasi Peta Muson Interaktif -->
+                        <div class="h-56 bg-slate-950 rounded-xl border border-teal-500/40 flex flex-col items-center justify-center relative overflow-hidden shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+                            <!-- Background Grid Animasi -->
+                            <div class="absolute inset-0 bg-gradient-to-tr from-teal-900/40 via-slate-900 to-blue-900/40"></div>
                             
-                            <!-- Animated Arrows (CSS) -->
+                            <!-- Animated Wind Particles (CSS) -->
                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div class="w-full h-full relative">
-                                   <!-- Vektor Angin Bergerak -->
-                                   <i class="fa-solid fa-arrow-right-long text-4xl text-emerald-400/80 absolute top-1/4 left-1/4 animate-[ping_2s_infinite]"></i>
-                                   <i class="fa-solid fa-arrow-right-long text-4xl text-emerald-400/80 absolute top-1/2 left-[40%] animate-[ping_2s_infinite_0.5s]"></i>
-                                   <i class="fa-solid fa-arrow-right-long text-4xl text-emerald-400/80 absolute top-3/4 left-[60%] animate-[ping_2s_infinite_1s]"></i>
+                                   <!-- Garis Vektor Angin (Diperbaiki letak & animasinya) -->
+                                   <div class="absolute top-[20%] left-[-10%] animate-[translateX_3s_linear_infinite] opacity-70">
+                                        <i class="fa-solid fa-wind text-3xl text-teal-400"></i>
+                                   </div>
+                                   <div class="absolute top-[50%] left-[-20%] animate-[translateX_4s_linear_infinite_1s] opacity-50">
+                                        <i class="fa-solid fa-wind text-4xl text-emerald-500"></i>
+                                   </div>
+                                   <div class="absolute top-[75%] left-[-15%] animate-[translateX_3.5s_linear_infinite_0.5s] opacity-60">
+                                        <i class="fa-solid fa-wind text-2xl text-cyan-400"></i>
+                                   </div>
                                 </div>
                             </div>
 
-                            <span class="text-white font-tech font-bold z-10 bg-slate-950/80 px-4 py-2 rounded-lg border border-slate-700 shadow-md">SIMULASI VEKTOR ANGIN</span>
+                            <span class="text-teal-300 font-tech font-bold z-10 bg-slate-950/90 px-5 py-2.5 rounded-lg border border-teal-500/50 shadow-[0_0_10px_rgba(20,184,166,0.5)] tracking-widest text-xs flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> SIMULASI VEKTOR AKTIF
+                            </span>
                         </div>
+                        
+                        <!-- Inline CSS Animation for Wind -->
+                        <style>
+                            @keyframes translateX {
+                                0% { transform: translateX(0); opacity: 0; }
+                                20% { opacity: 1; }
+                                80% { opacity: 1; }
+                                100% { transform: translateX(400px); opacity: 0; }
+                            }
+                        </style>
                     </div>
                 </div>
             </div>
@@ -712,12 +742,33 @@
 
         lokasiKajian.forEach(stn => {
             const marker = L.circleMarker(stn.coords, { radius: 8, fillColor: stn.color, color: "#ffffff", weight: 2, fillOpacity: 0.9 }).addTo(map);
+            
+            // Tooltip Ringkas di Peta (direction: 'auto' mencegah terpotong di tepi layar)
             marker.bindTooltip(`
-                <div class="text-[11px]">
-                    <strong class="font-bold text-white">${stn.name}</strong><br>
-                    <span class="text-slate-300 text-[9px]">${stn.desc}</span>
+                <div class="font-bold text-white flex items-center gap-1.5 whitespace-nowrap px-1">
+                    <i class="fa-solid fa-location-crosshairs" style="color: ${stn.color}"></i> ${stn.name}
                 </div>
-            `, { direction: 'top', className: 'custom-tooltip' });
+            `, { direction: 'auto', className: 'custom-tooltip' });
+
+            // Klik Marker: Detail utuh hanya dijelaskan oleh Chatbot
+            marker.on('click', () => {
+                const panel = document.getElementById('floatingChatPanel');
+                const icon = document.getElementById('botToggleIcon');
+                
+                if (panel.style.display === 'none' || panel.style.display === '') {
+                    panel.style.display = 'flex';
+                    icon.className = "fa-solid fa-xmark text-lg sm:text-xl text-white";
+                }
+                
+                const reply = `<div class="bg-slate-900 border-l-4 p-2.5 rounded shadow-md text-xs font-sans" style="border-color: ${stn.color}">
+                    <h4 class="font-black text-white mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1" style="color: ${stn.color}"><i class="fa-solid fa-satellite-dish"></i> Detail Ekologi Lokasi</h4>
+                    <p class="text-white font-bold mb-1">${stn.name}</p>
+                    <p class="text-slate-300 leading-relaxed text-justify">${stn.desc}</p>
+                    <p class="text-[9px] text-slate-400 mt-2 font-mono bg-slate-950 p-1 rounded border border-slate-800">Koordinat: ${stn.coords[0]}, ${stn.coords[1]}</p>
+                </div>`;
+                
+                appendBotReply(reply, `Menampilkan informasi detail mengenai ${stn.name}. ${stn.desc}`);
+            });
         });
 
         function focusMap(lat, lng) {
@@ -929,11 +980,10 @@
             const riverLine = [ [-6.845, 110.535], [-6.838, 110.528], [-6.830, 110.522], [originLat, originLng] ];
             L.polyline(riverLine, { color: sedColor, weight: 4, opacity: 0.8, dashArray: '5, 10', className: 'animate-pulse' }).addTo(dynamicMapLayers);
             
+            // Tooltip Analisis Ringkas
             plumePolygon.bindTooltip(`
-                <div class="text-[11px] font-mono text-center">
-                    <strong class="font-bold text-white"><i class="fa-solid fa-water text-blue-400"></i> SEBARAN PLUME SEDIMEN</strong><br>
-                    <span class="text-amber-300 text-[10px]">Estimasi Jangkauan: ${(sedRadius/1000).toFixed(2)} km</span><br>
-                    <span class="text-slate-300 text-[9px]">Pola: Distribusi Arus Hidrodinamika</span>
+                <div class="font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-water text-blue-400"></i> PLUME SEDIMEN
                 </div>
             `, { direction: 'top', className: 'custom-tooltip', permanent: true }).openTooltip();
 
@@ -1221,11 +1271,19 @@
                         ttsOutput = "Aplikasi ini disusun oleh Yusuf Hadi Nugroho, dari Program Doktor Ilmu Teknik Sipil Universitas Diponegoro.";
                     } else if(action === 'iklim') {
                         openClimateModal();
-                        reply = `<div class="bg-slate-900 border-l-4 border-teal-500 p-2.5 rounded shadow-md text-xs font-sans">
-                            <h4 class="font-black text-teal-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-cloud-sun-rain"></i> Analisis Iklim</h4>
-                            <p class="text-slate-300 mt-2 leading-relaxed text-justify">Dashboard iklim terbuka di layar utama. Menampilkan proyeksi vektor angin muson dan indeks <b>ENSO</b> terkini.</p>
+                        reply = `<div class="bg-slate-900 border-l-4 border-teal-500 p-2.5 rounded shadow-[0_0_15px_rgba(20,184,166,0.2)] text-xs font-sans">
+                            <h4 class="font-black text-teal-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-cloud-sun-rain"></i> Status Iklim & Muson Terkini</h4>
+                            <p class="text-slate-300 mt-2 leading-relaxed text-justify">Dasbor prediksi telah dibuka. Berikut adalah rincian parameter saat ini:</p>
+                            <ul class="list-disc pl-4 text-slate-200 space-y-1.5 mt-2 mb-2">
+                                <li><b>ENSO (El Niño):</b> Indeks ONI +1.2. Memicu defisit curah hujan dan potensi intrusi salinitas di muara.</li>
+                                <li><b>Muson Timur:</b> Angin dominan dari Australia. Arus laut bergerak ke Barat, mempertinggi konsentrasi endapan sedimen di pesisir.</li>
+                            </ul>
+                            <div class="bg-slate-950 p-1.5 rounded border border-teal-900/50 flex gap-2 items-start mt-2">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 text-[10px]"></i>
+                                <span class="text-[10px] text-teal-400 font-mono leading-tight">Rekomendasi: Tinjau ulang kekuatan struktur penahan sedimen (breakwater).</span>
+                            </div>
                         </div>`;
-                        ttsOutput = "Menampilkan data siklus angin muson, La Nina, dan El Nino pada dasbor antarmuka iklim.";
+                        ttsOutput = "Menampilkan dasbor iklim. Rincian status El Nino dan Muson Timur telah saya jabarkan di layar percakapan.";
                     }
                     
                     chatBox.innerHTML += `<div class="flex gap-2.5 mt-3">
@@ -1298,10 +1356,11 @@
                             map.flyTo([lat, lon], 12, {animate: true, duration: 1.5});
                             
                             const searchMarker = L.circleMarker([lat, lon], { radius: 10, fillColor: "#d946ef", color: "#ffffff", weight: 2, fillOpacity: 0.9, className: 'animate-pulse' }).addTo(dynamicMapLayers);
+                            
+                            // Tooltip Pencarian Ringkas
                             searchMarker.bindTooltip(`
-                                <div class="text-[11px] max-w-[200px] whitespace-normal">
-                                    <strong class="font-bold text-white"><i class="fa-solid fa-location-dot text-fuchsia-400"></i> ${page.title}</strong><br>
-                                    <span class="text-slate-300 text-[9px] block mt-1 line-clamp-3">${page.extract}</span>
+                                <div class="font-bold text-white flex items-center gap-1.5">
+                                    <i class="fa-solid fa-location-dot text-fuchsia-400"></i> ${page.title}
                                 </div>
                             `, { direction: 'top', className: 'custom-tooltip', permanent: true }).openTooltip();
                             
