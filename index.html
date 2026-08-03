@@ -73,6 +73,10 @@
         #screensaverScreen { display: none; opacity: 0; }
         @keyframes fadeWisdom { 0% { opacity: 0; transform: translateY(10px); } 10% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
         .wisdom-active { animation: fadeWisdom 10s ease-in-out forwards; }
+        
+        /* Shake Animation for Vault */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
     </style>
 </head>
 <body id="appBody" class="theme-dark bg-[var(--bg-main)] text-[var(--text-main)] p-4 md:p-6 min-h-screen flex flex-col justify-between overflow-x-hidden relative pb-32">
@@ -121,10 +125,10 @@
                 </div>
 
                 <div class="flex flex-col items-end gap-2 w-full md:w-auto">
-                    <!-- TAUTAN UPDATE DATABASE (DRIVE) -->
-                    <a href="https://drive.google.com/drive/folders/1yLgT_a6f35jxaEThoHVdqNSmuNmprdh6?usp=sharing" target="_blank" class="w-full sm:w-auto bg-blue-950 text-blue-400 text-[11px] font-mono font-black px-4 py-2 rounded-lg border-2 border-blue-500/50 hover:bg-blue-900 cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.4)]">
+                    <!-- TAUTAN UPDATE DATABASE (BRANGKAS) -->
+                    <button type="button" onclick="openVaultModal()" class="w-full sm:w-auto bg-blue-950 text-blue-400 text-[11px] font-mono font-black px-4 py-2 rounded-lg border-2 border-blue-500/50 hover:bg-blue-900 cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.4)]">
                         <i class="fa-brands fa-google-drive"></i> <span>UPDATE DATABASE & TEMATIK</span>
-                    </a>
+                    </button>
                     
                     <div class="flex flex-wrap items-center gap-2 w-full justify-stretch sm:justify-end">
                         <button type="button" onclick="openCreatorModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-mono font-black px-4 py-1.5 rounded-lg border-2 border-[var(--border-color)] cursor-pointer transition-all flex items-center justify-center gap-1.5">
@@ -393,6 +397,38 @@
                 <span class="text-white font-bold">"Model Pengelolaan Sedimen Berkelanjutan Wilayah Pantai"</span><br>
                 <span class="text-xs text-slate-400 mt-2 block">(Integrasi Sistem Darat–Pesisir, Dinamika Sedimen, Ekosistem, dan Kebijakan)</span>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL BRANGKAS (VAULT) -->
+    <div id="vaultModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 pointer-events-auto">
+        <div id="vaultBox" class="bg-slate-900 border-2 border-blue-500 rounded-2xl w-full max-w-sm p-6 shadow-[0_0_40px_rgba(59,130,246,0.5)] relative flex flex-col font-mono transition-transform">
+            <button type="button" onclick="closeVaultModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div class="text-center mb-6 mt-2">
+                <div class="w-16 h-16 bg-blue-950 border-2 border-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_0_15px_rgba(59,130,246,0.6)]">
+                    <i class="fa-solid fa-vault text-2xl text-blue-400"></i>
+                </div>
+                <h3 class="text-blue-400 text-lg font-black font-tech tracking-widest uppercase">BRANGKAS SISTEM</h3>
+                <p class="text-[10px] text-slate-400 mt-1 uppercase">Otentikasi Akses Database Induk</p>
+            </div>
+            
+            <form onsubmit="authenticateVault(event)" class="space-y-4">
+                <div>
+                    <label class="block text-slate-400 text-[10px] font-bold mb-1"><i class="fa-solid fa-user"></i> USERNAME</label>
+                    <input type="text" id="vaultUser" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors" autocomplete="off">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-[10px] font-bold mb-1"><i class="fa-solid fa-key"></i> PASSWORD</label>
+                    <input type="password" id="vaultPass" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors">
+                </div>
+                
+                <p id="vaultError" class="text-red-500 text-[10px] font-bold text-center hidden"><i class="fa-solid fa-triangle-exclamation"></i> Akses Ditolak! Kredensial tidak valid.</p>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-700 to-cyan-600 hover:from-blue-600 hover:to-cyan-500 text-white font-black py-3 rounded-xl uppercase font-tech text-xs tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-transform hover:scale-[1.02] cursor-pointer">
+                    <i class="fa-solid fa-unlock"></i> BUKA BRANGKAS
+                </button>
+            </form>
         </div>
     </div>
 
@@ -832,6 +868,39 @@
 
         function openCreatorModal() { document.getElementById('creatorModal').classList.remove('hidden'); }
         function closeCreatorModal() { document.getElementById('creatorModal').classList.add('hidden'); }
+
+        // --- BRANGKAS (VAULT) LOGIC ---
+        function openVaultModal() {
+            document.getElementById('vaultUser').value = '';
+            document.getElementById('vaultPass').value = '';
+            document.getElementById('vaultError').classList.add('hidden');
+            document.getElementById('vaultModal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('vaultUser').focus(), 100);
+        }
+
+        function closeVaultModal() {
+            document.getElementById('vaultModal').classList.add('hidden');
+        }
+
+        function authenticateVault(e) {
+            e.preventDefault();
+            const user = document.getElementById('vaultUser').value;
+            const pass = document.getElementById('vaultPass').value;
+            const errorMsg = document.getElementById('vaultError');
+            const box = document.getElementById('vaultBox');
+            
+            if(user === 'yusufhadin26' && pass === 'yusuf2026h') {
+                errorMsg.classList.add('hidden');
+                closeVaultModal();
+                if(typeof speakBot === 'function') speakBot("Otentikasi berhasil. Membuka brangkas database induk.");
+                window.open('https://drive.google.com/drive/folders/1yLgT_a6f35jxaEThoHVdqNSmuNmprdh6?usp=sharing', '_blank');
+            } else {
+                errorMsg.classList.remove('hidden');
+                box.classList.add('animate-shake');
+                setTimeout(() => box.classList.remove('animate-shake'), 400);
+                if(typeof speakBot === 'function') speakBot("Akses ditolak. Nama pengguna atau kata sandi tidak valid.");
+            }
+        }
 
         /* --- CHATBOT & SIRI TTS LOGIC --- */
         let isMuted = true;
