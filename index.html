@@ -45,6 +45,10 @@
         }
         .flip-back { transform: rotateY(180deg); }
         .flip-container.flipped .flip-inner { transform: rotateY(180deg); }
+        
+        /* Fix for iframe unresponsiveness when flipped in 3D */
+        .flip-container.flipped .flip-front { visibility: hidden; pointer-events: none; }
+        .flip-container:not(.flipped) .flip-back { visibility: hidden; pointer-events: none; }
 
         .leaflet-container { background: var(--bg-main) !important; }
         .satellite-style { filter: var(--map-filter); }
@@ -63,10 +67,9 @@
         .leaflet-popup-tip { display: none !important; }
         .leaflet-popup-close-button { color: #fff !important; top: 10px !important; right: 10px !important; font-size: 20px !important; z-index: 50 !important; }
         
-        /* Offset Leaflet Zoom Controls so it doesn't overlap our custom buttons */
+        /* Offset Leaflet Zoom Controls */
         .leaflet-top.leaflet-left { top: 90px !important; }
 
-        /* Audio feedback visual for Bot */
         .audio-speaking { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8), 0 0 30px rgba(16, 185, 129, 0.4); border-color: #10b981 !important; }
         
         /* Screensaver Animations */
@@ -74,14 +77,12 @@
         @keyframes fadeWisdom { 0% { opacity: 0; transform: translateY(10px); } 10% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
         .wisdom-active { animation: fadeWisdom 10s ease-in-out forwards; }
         
-        /* Shake Animation for Vault */
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
         .animate-shake { animation: shake 0.4s ease-in-out; }
     </style>
 </head>
 <body id="appBody" class="theme-dark bg-[var(--bg-main)] text-[var(--text-main)] p-4 md:p-6 min-h-screen flex flex-col justify-between overflow-x-hidden relative pb-32">
 
-    <!-- HEADER / DASHBOARD TOP -->
     <div id="mainDashboardInterface" class="w-full flex flex-col justify-between flex-1 gap-5">
         <header class="w-full bg-[var(--bg-header)] backdrop-blur-md p-5 rounded-2xl border-2 border-[var(--border-color)] flex flex-col xl:flex-row justify-between items-center gap-5 transition-all shadow-md">
             <div class="flex items-center gap-4 w-full xl:w-auto min-w-0 flex-1">
@@ -131,6 +132,9 @@
                     </button>
                     
                     <div class="flex flex-wrap items-center gap-2 w-full justify-stretch sm:justify-end">
+                        <button type="button" onclick="openHelpModal()" class="bg-amber-900/80 border border-amber-500/60 text-[11px] font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-amber-800 text-amber-300 flex items-center gap-1.5 shadow-md transition-colors">
+                            <i class="fa-solid fa-circle-info"></i> <span>INFO</span>
+                        </button>
                         <button type="button" onclick="openCreatorModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-mono font-black px-4 py-1.5 rounded-lg border-2 border-[var(--border-color)] cursor-pointer transition-all flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-code text-emerald-400"></i> <span>PENELITI</span>
                         </button>
@@ -142,7 +146,6 @@
             </div>
         </header>
 
-        <!-- MAIN LAYOUT -->
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full relative">
             
             <!-- LEFT SIDEBAR: KOMPONEN DINAMIKA -->
@@ -191,10 +194,9 @@
                 </div>
 
                 <!-- 3D Flipper & Fullscreen Container -->
-                <div id="mapFullscreenWrapper" class="w-full aspect-[16/10] relative rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-slate-950 transition-all">
+                <div id="mapFullscreenWrapper" class="w-full aspect-[16/10] relative rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-slate-950 transition-all z-20">
                     
-                    <!-- GLOBAL CONTROLS (Selalu di atas, muncul saat normal & fullscreen) -->
-                    <!-- Fullscreen & Hide UI Buttons -->
+                    <!-- GLOBAL CONTROLS -->
                     <div class="absolute top-4 left-4 z-[70] flex flex-col gap-2 pointer-events-auto">
                         <button type="button" onclick="toggleMapFullscreen()" class="bg-slate-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-400 hover:text-white p-2 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-colors flex items-center justify-center w-9 h-9" title="Toggle Fullscreen Visual">
                             <i id="fullscreenIcon" class="fa-solid fa-expand"></i>
@@ -204,23 +206,30 @@
                         </button>
                     </div>
 
-                    <!-- Peta/Arus Toggle -->
-                    <div id="globalMapToggle" class="absolute top-4 left-1/2 -translate-x-1/2 z-[70] pointer-events-auto transition-opacity duration-300">
+                    <!-- Peta/Arus Toggle (Always on Top) -->
+                    <div id="globalMapToggle" class="absolute top-4 left-1/2 -translate-x-1/2 z-[75] pointer-events-auto transition-opacity duration-300">
                         <div class="flex rounded-lg bg-[var(--panel-inner)] p-1 border border-emerald-500/40 text-[11px] font-mono font-black shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                             <button onclick="toggleMapWeatherFlip('map')" id="btnViewMap" class="px-3 py-1.5 rounded-md bg-emerald-600 text-white transition-all cursor-pointer shadow-inner">PETA GIS</button>
                             <button onclick="toggleMapWeatherFlip('weather')" id="btnViewWeather" class="px-3 py-1.5 rounded-md text-[var(--text-muted)] hover:text-white transition-all cursor-pointer">ARUS HIDRO</button>
                         </div>
                     </div>
 
+                    <!-- Search Bar Map -->
+                    <div id="mapSearchBar" class="absolute top-4 left-[60px] sm:left-[70px] z-[75] pointer-events-auto flex items-center bg-slate-900 border border-emerald-500/50 rounded-lg shadow-lg overflow-hidden w-40 sm:w-56 lg:w-64 transition-opacity duration-300">
+                        <input type="text" id="mapSearchInput" placeholder="Cari di peta / artikel..." class="w-full bg-transparent text-white text-xs px-3 py-2 outline-none font-sans" onkeydown="if(event.key==='Enter') searchMapLocation()">
+                        <button onclick="searchMapLocation()" class="px-3 py-2 text-emerald-400 hover:text-white bg-slate-800 border-l border-emerald-500/50 transition-colors cursor-pointer"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+
                     <div class="flip-container w-full h-full absolute inset-0 z-10" id="mapWeatherFlipper">
                         <div class="flip-inner w-full h-full">
                             
                             <!-- FRONT: LEAFLET MAP -->
-                            <div class="flip-front w-full h-full bg-slate-950 relative">
+                            <div class="flip-front w-full h-full bg-slate-950 relative pointer-events-auto">
                                 <div id="map" class="w-full h-full z-10"></div>
                                 
                                 <div id="mapSpecificUI" class="transition-opacity duration-300 z-20 absolute inset-0 pointer-events-none">
-                                    <div class="absolute top-4 right-4 pointer-events-auto">
+                                    <div class="absolute bottom-4 right-4 pointer-events-auto flex flex-col gap-2 items-end">
+                                        <!-- Layers Toggle -->
                                         <div class="flex rounded-lg bg-slate-950 p-1 border-2 border-emerald-500/50 text-[10px] font-mono font-black shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                             <button onclick="switchBaseMapLayer('street')" id="mapBtn-street" class="px-2 py-1 rounded text-slate-400 hover:text-white transition-all cursor-pointer">STREET</button>
                                             <button onclick="switchBaseMapLayer('topo')" id="mapBtn-topo" class="px-2 py-1 rounded text-slate-400 hover:text-white transition-all cursor-pointer">TOPO 3D</button>
@@ -236,11 +245,11 @@
                             </div>
 
                             <!-- BACK: WINDY IFRAME -->
-                            <div class="flip-back w-full h-full bg-slate-950 relative border-2 border-blue-400 overflow-hidden">
-                                <iframe id="dashboardWeatherIframe" width="100%" height="100%" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s&zoom=11&overlay=currents&product=ecmwf&level=surface&lat=-6.93&lon=110.5" frameborder="0"></iframe>
+                            <div class="flip-back w-full h-full bg-slate-950 relative border-2 border-blue-400 overflow-hidden pointer-events-auto">
+                                <iframe id="dashboardWeatherIframe" width="100%" height="100%" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s&zoom=11&overlay=currents&product=ecmwf&level=surface&lat=-6.93&lon=110.5" frameborder="0" allow="fullscreen" class="pointer-events-auto"></iframe>
                                 
                                 <div id="weatherSpecificUI" class="transition-opacity duration-300 z-20 absolute inset-0 pointer-events-none">
-                                    <div class="absolute bottom-4 left-4 pointer-events-auto">
+                                    <div class="absolute bottom-4 left-4 pointer-events-none">
                                         <div class="text-[10px] font-bold text-white bg-slate-950/80 px-3 py-1.5 rounded-lg border border-blue-400 font-tech tracking-wider shadow-md">
                                             <i class="fa-solid fa-water text-blue-400 animate-pulse"></i> SIMULASI ARUS LAUT & GELOMBANG
                                         </div>
@@ -350,7 +359,7 @@
         </main>
 
         <!-- WORKFLOW METHODOLOGY -->
-        <section class="w-full bg-[var(--bg-card)] p-5 rounded-2xl border-2 border-slate-700 mt-2 shadow-lg">
+        <section class="w-full bg-[var(--bg-card)] p-5 rounded-2xl border-2 border-slate-700 mt-2 shadow-lg relative z-10">
             <h2 class="font-tech text-sm md:text-base font-black text-emerald-400 border-b-2 border-emerald-900/50 pb-2 mb-4 flex items-center gap-2 uppercase tracking-wider">
                 <i class="fa-solid fa-diagram-next"></i> Metodologi Sistem Terintegrasi
             </h2>
@@ -398,7 +407,6 @@
                 <span class="text-xs text-slate-400 mt-2 block">(Integrasi Sistem Darat–Pesisir, Dinamika Sedimen, Ekosistem, dan Kebijakan)</span>
             </div>
             
-            <!-- TOMBOL GITHUB -->
             <a href="https://github.com/yusufhadin-bot/Sistem-Pengelolaan-Sedimen-Pesisir" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-mono text-[11px] font-bold py-3 px-4 rounded-xl border border-slate-600 transition-all flex items-center justify-center gap-2 shadow-inner hover:border-emerald-400 group">
                 <i class="fa-brands fa-github text-lg group-hover:text-emerald-400 transition-colors"></i> 
                 <span>REPOSITORY GITHUB</span>
@@ -438,8 +446,113 @@
         </div>
     </div>
 
+    <!-- HELP & SYSTEM MODAL -->
+    <div id="helpSystemModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 pointer-events-auto">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeHelpModal()"></div>
+        <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-[0_0_40px_rgba(245,158,11,0.5)] relative z-10 overflow-hidden">
+            <div class="p-4 bg-slate-950 border-b border-amber-900 flex justify-between items-center">
+                <div class="flex items-center gap-3 text-amber-400 font-black font-tech text-base uppercase tracking-widest">
+                    <i class="fa-solid fa-circle-info text-xl"></i> Petunjuk & Metrik Analisis DSS
+                </div>
+                <button onclick="closeHelpModal()" class="text-slate-400 hover:text-red-400 transition-colors"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-5 text-slate-300 text-sm leading-relaxed text-justify font-sans">
+                <p><b>Sistem Keputusan Pengelolaan Sedimen Pesisir (DSS)</b> adalah platform intelijen buatan (AI) yang mengintegrasikan data hidrodinamika, ekologi, dan sosio-ekonomi untuk menyimulasikan kelayakan wilayah pesisir. Sistem ini merupakan instrumen utama dalam merumuskan skenario mitigasi abrasi, pendangkalan, dan rehabilitasi mangrove pada ekosistem pesisir Demak dan sekitarnya.</p>
+                
+                <h4 class="text-emerald-400 font-bold uppercase mt-4 border-b border-slate-700 pb-1 font-tech">Metrik Analisis & IKS</h4>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><b class="text-white">Indeks Keberlanjutan Sedimen (IKS):</b> Skor holistik [0.0 - 1.0] yang merepresentasikan stabilitas pesisir. <b>IKS &ge; 0.7</b> mengindikasikan keseimbangan sedimen dan ekologi terjaga. <b>IKS &lt; 0.4</b> mengindikasikan defisit ekologi akut (rawan abrasi).</li>
+                    <li><b class="text-white">Neraca Sedimen (Sediment Budget):</b> Selisih laju pengendapan (akresi) dari sungai dikurangi erosi laut dan pengerukan. Diukur dalam mm/tahun.</li>
+                    <li><b class="text-white">Variabel Vensim (Sistem Dinamis):</b> Mengatur <i>causal loop</i>. Debit sungai tinggi + rehabilitasi mangrove meningkatkan tahanan pesisir. Pengerukan eksploitatif memicu krisis ekologi tambak.</li>
+                </ul>
+
+                <h4 class="text-blue-400 font-bold uppercase mt-4 border-b border-slate-700 pb-1 font-tech">Fitur Utama Platform</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                        <b class="text-blue-300 block mb-1 font-tech text-[11px]"><i class="fa-solid fa-earth-asiapacific"></i> Peta GIS & Radar Arus</b>
+                        Pemetaan 3-Dimensi satelit dan kontur topografi. Lapisan radar arus memvisualisasikan data gelombang dan angin secara real-time dari Windy. Tersedia bar <b>Pencarian Lokasi (Geocoding)</b>.
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                        <b class="text-fuchsia-300 block mb-1 font-tech text-[11px]"><i class="fa-solid fa-microchip"></i> Analisis Algoritma</b>
+                        Modul sinkronisasi yang menghitung korelasi data. Melakukan <i>fly-over</i> otomatis ke episentrum sedimen di muara dan menggambar model <i>Sediment Plume</i>.
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                        <b class="text-cyan-300 block mb-1 font-tech text-[11px]"><i class="fa-solid fa-robot"></i> JARVIS AI & Voice Command</b>
+                        Asisten chatbot yang mendengarkan komando suara Anda, mampu menarik referensi Wikipedia, sinkronisasi visual ke peta, dan menjawab metrik kelayakan pesisir.
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                        <b class="text-amber-300 block mb-1 font-tech text-[11px]"><i class="fa-solid fa-cloud-sun-rain"></i> Prediksi Klimatologi</b>
+                        Dasbor terpisah untuk memantau simulasi interaktif siklus Angin Muson, ENSO (El Nino / La Nina) dan korelasinya terhadap pesisir (klik ikon awan & matahari).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIMATE (MONSOON/ENSO) MODAL -->
+    <div id="climateModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-teal-500 rounded-2xl w-full max-w-4xl p-0 relative shadow-[0_0_40px_rgba(20,184,166,0.5)] overflow-hidden flex flex-col h-[85vh]">
+            <div class="bg-slate-950 p-4 border-b border-teal-900 flex justify-between items-center">
+                <h3 class="text-teal-400 font-black font-tech text-base md:text-lg uppercase tracking-widest"><i class="fa-solid fa-cloud-sun-rain"></i> Prediksi Angin Muson & ENSO</h3>
+                <button onclick="closeClimateModal()" class="text-slate-400 hover:text-red-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar space-y-6">
+                <!-- ENSO Status -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-rose-950/60 to-orange-950/60 border border-rose-500 p-4 rounded-xl shadow-lg relative overflow-hidden">
+                        <i class="fa-solid fa-fire absolute -bottom-4 -right-4 text-8xl text-rose-500/20"></i>
+                        <h4 class="text-rose-400 font-bold font-mono text-sm mb-2">STATUS EL NIÑO (ENSO Positif)</h4>
+                        <div class="text-3xl font-black text-white font-tech mb-1">ONI: +1.2 <span class="text-sm font-sans font-normal text-rose-300">(Moderate)</span></div>
+                        <p class="text-xs text-slate-300 leading-relaxed text-justify relative z-10">Pemanasan suhu muka laut di Samudra Pasifik ekuator. Berpotensi menurunkan curah hujan di wilayah pesisir Demak, meningkatkan salinitas muara, dan memicu kekeringan yang berdampak pada siklus panen tambak.</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-950/60 to-cyan-950/60 border border-blue-500 p-4 rounded-xl shadow-lg relative overflow-hidden">
+                        <i class="fa-solid fa-cloud-showers-heavy absolute -bottom-4 -right-4 text-8xl text-blue-500/20"></i>
+                        <h4 class="text-blue-400 font-bold font-mono text-sm mb-2">STATUS LA NIÑA (ENSO Negatif)</h4>
+                        <div class="text-3xl font-black text-white font-tech mb-1">ONI: -0.8 <span class="text-sm font-sans font-normal text-blue-300">(Weak)</span></div>
+                        <p class="text-xs text-slate-300 leading-relaxed text-justify relative z-10">Pendinginan suhu muka laut yang memicu curah hujan ekstrem. Meningkatkan debit inflow Sungai Tuntang, mempercepat laju sedimentasi pesisir, dan mempertinggi risiko banjir rob di kawasan Sayung.</p>
+                    </div>
+                </div>
+                
+                <!-- Muson Simulation -->
+                <div class="bg-slate-950 border border-slate-700 rounded-xl p-4 shadow-inner">
+                    <h4 class="text-emerald-400 font-bold font-mono text-sm mb-3 border-b border-slate-800 pb-2"><i class="fa-solid fa-wind"></i> Siklus Angin Muson Indonesia</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-4">
+                            <div class="p-3 bg-slate-900 border border-slate-700 rounded-lg hover:border-emerald-500 transition-colors">
+                                <h5 class="text-emerald-300 font-bold text-xs mb-1">Muson Barat (Okt - Apr)</h5>
+                                <p class="text-[11px] text-slate-400 text-justify">Angin bergerak dari Benua Asia ke Australia membawa uap air tinggi. Memperkuat arus laut yang membawa sedimen ke arah Timur. Risiko abrasi tinggi pada pesisir yang menghadap Barat Laut.</p>
+                            </div>
+                            <div class="p-3 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 transition-colors">
+                                <h5 class="text-amber-300 font-bold text-xs mb-1">Muson Timur (Apr - Okt)</h5>
+                                <p class="text-[11px] text-slate-400 text-justify">Angin kering dari Australia ke Asia. Arus laut dominan ke arah Barat. Konsentrasi sedimen cenderung mengendap di muara sungai karena energi gelombang yang relatif lebih tenang.</p>
+                            </div>
+                        </div>
+                        <!-- Animasi Peta Muson Sederhana -->
+                        <div class="h-48 bg-slate-900 rounded-lg border border-slate-700 flex flex-col items-center justify-center relative overflow-hidden">
+                            <!-- Background Map (menggunakan fallback gradient jika gambar lambat) -->
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-cyan-900 opacity-50"></div>
+                            
+                            <!-- Animated Arrows (CSS) -->
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="w-full h-full relative">
+                                   <!-- Vektor Angin Bergerak -->
+                                   <i class="fa-solid fa-arrow-right-long text-4xl text-emerald-400/80 absolute top-1/4 left-1/4 animate-[ping_2s_infinite]"></i>
+                                   <i class="fa-solid fa-arrow-right-long text-4xl text-emerald-400/80 absolute top-1/2 left-[40%] animate-[ping_2s_infinite_0.5s]"></i>
+                                   <i class="fa-solid fa-arrow-right-long text-4xl text-emerald-400/80 absolute top-3/4 left-[60%] animate-[ping_2s_infinite_1s]"></i>
+                                </div>
+                            </div>
+
+                            <span class="text-white font-tech font-bold z-10 bg-slate-950/80 px-4 py-2 rounded-lg border border-slate-700 shadow-md">SIMULASI VEKTOR ANGIN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- FLOATING CHATBOT PANEL & CONTROLS -->
-    <!-- Panel Chat (Hidden by Default) -->
     <div id="floatingChatPanel" class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-[9998] w-[340px] sm:w-[420px] max-w-[calc(100vw-2rem)] bg-slate-950/95 backdrop-blur-xl border border-emerald-500 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden flex-col h-[550px] max-h-[75vh] font-mono" style="display: none;">
         <!-- Chat Header -->
         <div class="bg-gradient-to-r from-slate-950 to-emerald-950 border-b border-emerald-500/40 p-3 flex justify-between items-center shadow-inner">
@@ -462,6 +575,7 @@
                 <button onclick="openVoiceSettingsModal()" class="text-emerald-400 hover:text-white bg-slate-900 border border-emerald-500/60 p-2 rounded-lg transition-all hover:bg-emerald-950 flex items-center gap-1 text-xs" title="Tema Suara">
                     <i class="fa-solid fa-waveform-lines text-emerald-300"></i>
                 </button>
+                <!-- Voice is Muted By Default -->
                 <button type="button" onclick="toggleMute()" class="text-rose-400 hover:text-white bg-slate-900 border border-rose-500/60 p-2 rounded-lg transition-all hover:bg-rose-950 flex items-center gap-1 text-xs" title="Toggle Suara">
                     <i id="chatMuteIcon" class="fa-solid fa-volume-xmark"></i>
                 </button>
@@ -475,7 +589,7 @@
                 <div class="bg-emerald-950 border border-emerald-600/50 h-7 w-7 rounded flex items-center justify-center flex-shrink-0 text-emerald-400"><i class="fa-solid fa-robot text-xs"></i></div>
                 <div class="bg-slate-900 border border-slate-800 p-3 rounded-r-xl rounded-bl-xl text-slate-200 shadow-md w-full">
                     <p class="font-bold text-[10px] text-emerald-400 mb-1 font-mono">🤖 JARVIS AI:</p>
-                    <span>Halo! Saya asisten AI pada Sistem Pengelolaan Sedimen Berkelanjutan (DSS). Saya dapat memberikan informasi status pesisir terkini, hasil simulasi Vensim, atau referensi lainnya dari ensiklopedia.</span>
+                    <span>Halo! Saya asisten AI pada Sistem Pengelolaan Sedimen. Anda dapat <b>mencari lokasi/artikel</b>, mengecek status pesisir, atau menanyakan prediksi <b>Iklim/Muson</b>. Gunakan fitur MIC untuk perintah suara.</span>
                 </div>
             </div>
         </div>
@@ -483,17 +597,18 @@
         <!-- Shortcuts -->
         <div class="p-2 bg-slate-900 border-t border-slate-800 flex gap-2 overflow-x-auto custom-scrollbar shrink-0 font-sans">
             <button onclick="triggerChatShortcut('status_pesisir')" class="whitespace-nowrap px-2.5 py-1.5 bg-slate-950 hover:bg-emerald-950 text-emerald-400 text-[11px] rounded border border-emerald-900 font-bold transition-all"><i class="fa-solid fa-chart-pie"></i> Status Pesisir</button>
+            <button onclick="triggerChatShortcut('iklim')" class="whitespace-nowrap px-2.5 py-1.5 bg-slate-950 hover:bg-teal-950 text-teal-400 text-[11px] rounded border border-teal-900 font-bold transition-all"><i class="fa-solid fa-cloud-sun-rain"></i> Iklim & Muson</button>
             <button onclick="triggerChatShortcut('simulasi_vensim')" class="whitespace-nowrap px-2.5 py-1.5 bg-slate-950 hover:bg-blue-950 text-blue-400 text-[11px] rounded border border-blue-900 font-bold transition-all"><i class="fa-solid fa-project-diagram"></i> Simulasi Vensim</button>
             <button onclick="triggerChatShortcut('programmer')" class="whitespace-nowrap px-2.5 py-1.5 bg-slate-950 hover:bg-fuchsia-950 text-fuchsia-400 text-[11px] rounded border border-fuchsia-900 font-bold transition-all"><i class="fa-solid fa-code"></i> Peneliti</button>
         </div>
 
         <!-- Input -->
         <div class="p-2.5 bg-slate-950 border-t border-emerald-900 flex gap-2 items-center">
-            <button id="micBtn" onclick="toggleDictation()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 px-3 py-2.5 rounded-lg text-sm transition-colors shadow-inner" title="Dikte Suara (Mic)">
+            <button id="micBtn" onclick="toggleDictation()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 px-3 py-2.5 rounded-lg text-sm transition-colors shadow-inner shrink-0" title="Dikte Suara (Mic)">
                 <i class="fa-solid fa-microphone"></i>
             </button>
-            <input type="text" id="chatInputField" placeholder="Tanya informasi pesisir, sedimen, dll..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-emerald-500 font-sans" onkeydown="if(event.key === 'Enter') processUserChatMessage()">
-            <button onclick="processUserChatMessage()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-lg text-sm font-black shadow-md"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="text" id="chatInputField" placeholder="Tanya informasi pesisir, cari lokasi..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-emerald-500 font-sans" onkeydown="if(event.key === 'Enter') processUserChatMessage()">
+            <button onclick="processUserChatMessage()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-lg text-sm font-black shadow-md shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -501,15 +616,23 @@
     <div id="globalActionButtons" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] pointer-events-none">
         <div class="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pointer-events-auto relative w-max ml-auto mt-auto">
             <div id="floatingButtonsGroup" class="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 transition-all duration-500 ease-in-out transform origin-right translate-x-0 opacity-100 pr-[3.5rem] sm:pr-[4.5rem]">
+                <!-- Refresh -->
                 <button type="button" onclick="location.reload()" class="bg-rose-600 hover:bg-rose-500 text-white border border-rose-400 h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-[0_0_20px_rgba(225,29,72,0.6)] flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Refresh Dasbor">
                     <i class="fa-solid fa-rotate-right text-base sm:text-lg"></i>
                 </button>
+                <!-- Prediksi Iklim -->
+                <button type="button" onclick="openClimateModal()" class="bg-amber-600 hover:bg-amber-500 text-white border border-amber-400 h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-[0_0_20px_rgba(245,158,11,0.6)] flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Prediksi Angin Muson, La Nina & El Nino">
+                    <i class="fa-solid fa-cloud-sun-rain text-base sm:text-lg"></i>
+                </button>
+                <!-- Analisis Algoritma -->
                 <button type="button" onclick="triggerAnalisisAlgoritma()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white border border-fuchsia-400 h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-[0_0_20px_rgba(192,38,211,0.6)] flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Analisis Algoritma Vensim & Prediksi Spasial">
                     <i class="fa-solid fa-microchip text-base sm:text-lg"></i>
                 </button>
+                <!-- Screensaver -->
                 <button type="button" onclick="activateScreensaverManual(event)" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-400 h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-[0_0_20px_rgba(37,99,235,0.6)] flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Aktifkan Screensaver">
                     <i class="fa-solid fa-desktop text-base sm:text-lg"></i>
                 </button>
+                <!-- Chatbot Toggle -->
                 <button type="button" onclick="toggleFloatingChatbot()" class="bg-gradient-to-tr from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white border border-emerald-300 h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.8)] flex items-center justify-center transition-transform hover:scale-110 relative cursor-pointer shrink-0" title="Buka Jarvis AI">
                     <div class="h-2.5 w-2.5 sm:h-3 sm:w-3 bg-white rounded-full absolute top-0 right-0 sm:top-1 sm:right-1 animate-ping border border-slate-950"></div>
                     <i id="botToggleIcon" class="fa-solid fa-robot text-lg sm:text-xl"></i>
@@ -567,7 +690,8 @@
     <script>
         let currentTheme = 'dark';
         let currentMapLayer = null;
-        let dynamicMapLayers = null; // Menampung layer prediksi dinamis
+        let dynamicMapLayers = null; // Container for dynamic vectors
+        
         const mapTileProviders = {
             street: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             topo: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
@@ -577,7 +701,7 @@
         // Initialize Map (Center di Demak: Sayung/Morodemak)
         const map = L.map('map', { center: [-6.920, 110.500], zoom: 11, zoomControl: true });
         currentMapLayer = L.tileLayer(mapTileProviders.satellite).addTo(map);
-        dynamicMapLayers = L.layerGroup().addTo(map); // Inisialisasi layer prediksi
+        dynamicMapLayers = L.layerGroup().addTo(map);
 
         // Marker Studi Kasus
         const lokasiKajian = [
@@ -612,6 +736,7 @@
             document.getElementById(`mapBtn-${style}`).className = "px-2 py-1 rounded bg-emerald-600 text-white font-bold transition-all cursor-pointer shadow-inner";
         }
 
+        // --- MAP UI TOGGLES ---
         function toggleMapFullscreen() {
             const mapWrapper = document.getElementById('mapFullscreenWrapper');
             const icon = document.getElementById('fullscreenIcon');
@@ -625,7 +750,7 @@
                 else if (mapWrapper.msRequestFullscreen) { mapWrapper.msRequestFullscreen(); }
                 icon.className = "fa-solid fa-compress";
                 mapWrapper.classList.remove('rounded-2xl', 'border-2');
-                // Pindahkan elemen floating ke dalam fullscreen context
+                mapWrapper.classList.add('z-[1000]'); // Bring map to absolute top
                 if(actionBtns) mapWrapper.appendChild(actionBtns);
                 if(chatPanel) mapWrapper.appendChild(chatPanel);
             } else {
@@ -634,13 +759,12 @@
                 else if (document.msExitFullscreen) { document.msExitFullscreen(); }
                 icon.className = "fa-solid fa-expand";
                 mapWrapper.classList.add('rounded-2xl', 'border-2');
-                // Kembalikan ke body
+                mapWrapper.classList.remove('z-[1000]');
                 if(actionBtns) appBody.appendChild(actionBtns);
                 if(chatPanel) appBody.appendChild(chatPanel);
             }
         }
 
-        // Listener jika keluar fullscreen pakai tombol ESC di keyboard
         document.addEventListener('fullscreenchange', () => {
             const mapWrapper = document.getElementById('mapFullscreenWrapper');
             const icon = document.getElementById('fullscreenIcon');
@@ -650,6 +774,7 @@
             if (!document.fullscreenElement) {
                 icon.className = "fa-solid fa-expand";
                 mapWrapper.classList.add('rounded-2xl', 'border-2');
+                mapWrapper.classList.remove('z-[1000]');
                 if(actionBtns) appBody.appendChild(actionBtns);
                 if(chatPanel) appBody.appendChild(chatPanel);
             }
@@ -657,6 +782,7 @@
 
         function toggleMapUI() {
             const globalToggle = document.getElementById('globalMapToggle');
+            const searchBar = document.getElementById('mapSearchBar');
             const mapUI = document.getElementById('mapSpecificUI');
             const weatherUI = document.getElementById('weatherSpecificUI');
             const icon = document.getElementById('toggleMapUIIcon');
@@ -665,6 +791,7 @@
             if (globalToggle.style.opacity === '0') {
                 globalToggle.style.opacity = '1';
                 globalToggle.style.pointerEvents = 'auto';
+                if(searchBar) { searchBar.style.opacity = '1'; searchBar.style.pointerEvents = 'auto'; }
                 if(mapUI) mapUI.style.opacity = '1';
                 if(weatherUI) weatherUI.style.opacity = '1';
                 if(leafletControls) leafletControls.style.display = 'block';
@@ -672,6 +799,7 @@
             } else {
                 globalToggle.style.opacity = '0';
                 globalToggle.style.pointerEvents = 'none';
+                if(searchBar) { searchBar.style.opacity = '0'; searchBar.style.pointerEvents = 'none'; }
                 if(mapUI) mapUI.style.opacity = '0';
                 if(weatherUI) weatherUI.style.opacity = '0';
                 if(leafletControls) leafletControls.style.display = 'none';
@@ -695,7 +823,26 @@
             }
         }
 
-        // Logic Simulasi Vensim (Sistem Dinamis)
+        // --- MAP SEARCH FUNCTIONALITY ---
+        function searchMapLocation() {
+            const query = document.getElementById('mapSearchInput').value.trim();
+            if(!query) return;
+            
+            // Open chatbot if hidden
+            const chatPanel = document.getElementById('floatingChatPanel');
+            const icon = document.getElementById('botToggleIcon');
+            if (chatPanel.style.display === 'none' || chatPanel.style.display === '') {
+                chatPanel.style.display = 'flex';
+                icon.className = "fa-solid fa-xmark text-lg sm:text-xl text-white";
+            }
+            
+            // Pass to chatbot processing
+            document.getElementById('chatInputField').value = "Cari " + query;
+            processUserChatMessage(true); 
+            document.getElementById('mapSearchInput').value = '';
+        }
+
+        // --- SIMULATOR VENSIM LOGIC ---
         function jalankanSimulasiVensim() {
             const valDebit = parseInt(document.getElementById("slider-debit").value); // 1 - 100
             const valMangrove = parseInt(document.getElementById("slider-mangrove").value); // 0 - 100
@@ -705,26 +852,20 @@
             document.getElementById("lbl-mangrove").innerText = valMangrove + "%";
             document.getElementById("lbl-keruk").innerText = valKeruk < 30 ? "Rendah" : (valKeruk > 70 ? "Eksploitatif" : "Terencana");
 
-            // Algoritma Sistem Dinamis Sederhana (Proxy)
-            // Abrasi dipengaruhi debit rendah & mangrove rendah.
             let risikoAbrasi = 100 - valMangrove; 
             if (valDebit < 40) risikoAbrasi += 20; 
             if (valKeruk > 60) risikoAbrasi += 15;
             risikoAbrasi = Math.max(10, Math.min(100, risikoAbrasi));
 
-            // Sedimen Kotor dipengaruhi debit hulu tinggi & pengerukan kurang
             let akumulasiSedimen = (valDebit * 0.8) - (valKeruk * 0.5) - (valMangrove * 0.2);
             akumulasiSedimen = Math.max(10, Math.min(100, akumulasiSedimen + 30));
 
-            // Kualitas Ekologi (Tambak)
             let ecoScore = valMangrove * 0.7 - (akumulasiSedimen * 0.3);
             ecoScore = Math.max(10, Math.min(100, ecoScore + 40));
 
-            // IKS (Indeks Keberlanjutan Sedimen) [0 - 1.00]
             let iks = (ecoScore - (risikoAbrasi * 0.4) - (Math.abs(50 - akumulasiSedimen) * 0.3)) / 100;
             iks = Math.max(0.1, Math.min(1.0, iks + 0.3));
 
-            // Update UI
             document.getElementById("bar-abrasi").style.width = risikoAbrasi + "%";
             document.getElementById("val-abrasi").innerText = risikoAbrasi > 70 ? "Kritis" : (risikoAbrasi > 40 ? "Sedang" : "Aman");
 
@@ -748,45 +889,32 @@
             iksStatus.innerText = statusIks;
         }
 
-        // Prediksi Algoritma & Sinkronisasi Spasial Peta
+        // --- ANALISIS ALGORITMA SPASIAL-DINAMIS ---
         function triggerAnalisisAlgoritma() {
-            // Jalankan simulasi dasar
             jalankanSimulasiVensim();
-
-            // Ekstrak parameter hasil simulasi
             const akumulasiSedimen = parseFloat(document.getElementById("bar-sedimen").style.width);
-            const risikoAbrasi = parseFloat(document.getElementById("bar-abrasi").style.width);
             
-            // 1. Sinkronisasi Visual di Peta GIS
             dynamicMapLayers.clearLayers();
             if(document.getElementById('mapWeatherFlipper').classList.contains('flipped')){
                 toggleMapWeatherFlip('map');
             }
 
-            // Hitung radius dampak dan warna peringatan
-            let sedRadius = akumulasiSedimen * 35; // Skala radius dalam meter
+            let sedRadius = akumulasiSedimen * 35; 
             let sedColor = akumulasiSedimen > 60 ? '#ef4444' : (akumulasiSedimen > 40 ? '#f59e0b' : '#10b981');
             
-            // Kordinat Pusat Estuari Morodemak
             let originLat = -6.824;
             let originLng = 110.518;
-            let degRadius = sedRadius / 111320; // Konversi kasar meter ke derajat lintang
+            let degRadius = sedRadius / 111320; 
             
-            // A. Inti Plume (Konsentrasi tinggi sedimen di muara)
+            // Inti Plume
             L.circle([originLat, originLng], {
-                color: 'transparent',
-                fillColor: sedColor,
-                fillOpacity: 0.8,
-                radius: sedRadius * 0.3,
-                className: 'animate-pulse'
+                color: 'transparent', fillColor: sedColor, fillOpacity: 0.8, radius: sedRadius * 0.3, className: 'animate-pulse'
             }).addTo(dynamicMapLayers);
 
-            // B. Sebaran Plume Sedimen Alami (Bentuk Kipas/Fan menyebar ke Laut Jawa)
+            // Natural Sediment Plume Fan
             let fanPoints = [[originLat, originLng]];
-            // Asumsi arah laut di Morodemak menghadap Barat Laut ke Utara (sudut 260 - 350 derajat)
             for (let angle = 260; angle <= 350; angle += 6) {
                 let rad = angle * (Math.PI / 180);
-                // Tambahkan noise random agar pinggiran plume (plume edge) terlihat alami tidak bulat sempurna
                 let rRandom = degRadius * (0.6 + Math.random() * 0.6); 
                 let lat = originLat + (rRandom * Math.cos(rad));
                 let lng = originLng + (rRandom * Math.sin(rad));
@@ -794,29 +922,13 @@
             }
             
             const plumePolygon = L.polygon(fanPoints, {
-                color: sedColor,
-                weight: 1,
-                fillColor: sedColor,
-                fillOpacity: 0.35,
-                className: 'animate-pulse'
+                color: sedColor, weight: 1, fillColor: sedColor, fillOpacity: 0.35, className: 'animate-pulse'
             }).addTo(dynamicMapLayers);
 
-            // C. Alur Sungai (Sumber Sedimen dari Darat/DAS)
-            const riverLine = [
-                [-6.845, 110.535], // Hulu
-                [-6.838, 110.528], // Tengah
-                [-6.830, 110.522], // Hilir
-                [originLat, originLng] // Muara
-            ];
-            L.polyline(riverLine, {
-                color: sedColor,
-                weight: 4,
-                opacity: 0.8,
-                dashArray: '5, 10', // Garis putus-putus menggambarkan flow
-                className: 'animate-pulse'
-            }).addTo(dynamicMapLayers);
+            // River Line Flow
+            const riverLine = [ [-6.845, 110.535], [-6.838, 110.528], [-6.830, 110.522], [originLat, originLng] ];
+            L.polyline(riverLine, { color: sedColor, weight: 4, opacity: 0.8, dashArray: '5, 10', className: 'animate-pulse' }).addTo(dynamicMapLayers);
             
-            // Tooltip pada area plume
             plumePolygon.bindTooltip(`
                 <div class="text-[11px] font-mono text-center">
                     <strong class="font-bold text-white"><i class="fa-solid fa-water text-blue-400"></i> SEBARAN PLUME SEDIMEN</strong><br>
@@ -825,10 +937,9 @@
                 </div>
             `, { direction: 'top', className: 'custom-tooltip', permanent: true }).openTooltip();
 
-            // Auto-Focus Kamera Peta ke Titik Kritis
             map.flyTo([-6.824, 110.518], 13, {animate: true, duration: 1.5});
 
-            // 2. Berikan output analisis ke Chatbot Jarvis
+            // Auto Open Chatbot & Reply
             const panel = document.getElementById('floatingChatPanel');
             const icon = document.getElementById('botToggleIcon');
             if (panel.style.display === 'none' || panel.style.display === '') {
@@ -841,29 +952,27 @@
             chatBox.innerHTML += `<div id="${typingId}" class="flex gap-2.5 mt-3">
                 <div class="bg-slate-900 border border-emerald-600/50 h-7 w-7 rounded flex items-center justify-center flex-shrink-0 text-emerald-400"><i class="fa-solid fa-robot text-xs fa-spin"></i></div>
                 <div class="bg-slate-900 border border-slate-800 p-3 rounded-r-xl rounded-bl-xl text-slate-400 text-xs w-full shadow-md leading-relaxed animate-pulse">
-                    Menganalisis Algoritma Spasial-Dinamis dan Data Klimatologi...
+                    Menganalisis Algoritma Spasial-Dinamis...
                 </div>
             </div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
 
             setTimeout(() => {
                 document.getElementById(typingId)?.remove();
-                
                 let statusKritis = akumulasiSedimen > 60 ? "SANGAT TINGGI" : (akumulasiSedimen > 40 ? "MODERAT" : "RENDAH");
                 
                 let reply = `<div class="bg-slate-900 border-l-4 border-fuchsia-500 p-2.5 rounded shadow-md text-xs font-sans">
                     <h4 class="font-black text-fuchsia-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-satellite-dish"></i> Prediksi Spasial-Dinamis</h4>
-                    <p class="text-slate-300 mt-2 leading-relaxed text-justify">Berdasarkan pemrosesan algoritma Vensim dan korelasi data curah hujan tinggi di Hulu DAS (Kali Tuntang), probabilitas akumulasi sedimen pesisir berada pada tingkat <b>${statusKritis} (${akumulasiSedimen.toFixed(1)}%)</b>.</p>
-                    <p class="text-emerald-400 font-bold mt-2 text-[10px] bg-slate-950 p-2 border border-slate-800 rounded shadow-inner"><i class="fa-solid fa-map-location-dot"></i> Koordinat sedimentasi telah dipetakan di layar GIS utama dengan cakupan radius ${(sedRadius/1000).toFixed(2)} km.</p>
+                    <p class="text-slate-300 mt-2 leading-relaxed text-justify">Berdasarkan pemrosesan algoritma Vensim, probabilitas akumulasi sedimen pesisir berada pada tingkat <b>${statusKritis} (${akumulasiSedimen.toFixed(1)}%)</b>.</p>
+                    <p class="text-emerald-400 font-bold mt-2 text-[10px] bg-slate-950 p-2 border border-slate-800 rounded shadow-inner"><i class="fa-solid fa-map-location-dot"></i> Sebaran aliran sedimen plume telah disinkronkan ke layar GIS.</p>
                 </div>`;
-                
                 let ttsOutput = `Analisis algoritma Vensim telah selesai. Prediksi tingkat akumulasi sedimen menunjukkan status ${statusKritis}. Area terdampak telah saya petakan secara sinkron ke dalam layar geospasial utama.`;
                 
                 appendBotReply(reply, ttsOutput);
             }, 1800);
         }
 
-        // 5 Pilar Data
+        // --- 5 PILAR DATA ---
         const pilarData = {
             1: { title: "NERACA SEDIMEN TERINTEGRASI", icon: "fa-scale-balanced", desc: "Menghubungkan dinamika hulu-hilir (sungai ke estuari pesisir).", items: ["Deposit Sedimen: Hasil interaksi aliran sungai dan gelombang laut.", "Erosi / Ekstraksi: Berkurangnya massa akibat pengerukan manusia (Eh,i) atau abrasi."] },
             2: { title: "MODEL HIDRO-SEDIMEN (MIKE21)", icon: "fa-water", desc: "Pemodelan 2D/3D dari arus, pasang surut, dan transpor sedimen.", items: ["Distribusi Spasial: Memprediksi perubahan elevasi dasar laut.", "Interaksi Vegetasi: Pengaruh arus terhadap ketahanan mangrove."] },
@@ -892,41 +1001,38 @@
                 <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-4">${listHTML}</ul>`;
         }
 
+        // --- THEME & MODAL HANDLERS ---
         function toggleThemeInterface() {
             const body = document.getElementById('appBody');
             const mainTitle = document.getElementById('mainAppTitle');
             if (currentTheme === 'dark') {
-                body.classList.remove('theme-dark');
-                body.classList.add('theme-light');
+                body.classList.remove('theme-dark'); body.classList.add('theme-light');
                 mainTitle.className = "font-tech text-lg md:text-xl lg:text-2xl font-black tracking-wider text-slate-900 bg-none leading-tight uppercase";
-                document.getElementById('themeIcon').className = "fa-solid fa-sun";
-                document.getElementById('themeText').innerText = "LIGHT";
+                document.getElementById('themeIcon').className = "fa-solid fa-sun text-amber-500"; document.getElementById('themeText').innerText = "LIGHT";
                 currentTheme = 'light';
             } else {
-                body.classList.remove('theme-light');
-                body.classList.add('theme-dark');
+                body.classList.remove('theme-light'); body.classList.add('theme-dark');
                 mainTitle.className = "font-tech text-lg md:text-xl lg:text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-emerald-400 leading-tight uppercase";
-                document.getElementById('themeIcon').className = "fa-solid fa-moon";
-                document.getElementById('themeText').innerText = "DARK";
+                document.getElementById('themeIcon').className = "fa-solid fa-moon text-white"; document.getElementById('themeText').innerText = "DARK";
                 currentTheme = 'dark';
             }
         }
 
         function openCreatorModal() { document.getElementById('creatorModal').classList.remove('hidden'); }
         function closeCreatorModal() { document.getElementById('creatorModal').classList.add('hidden'); }
+        function openHelpModal() { document.getElementById('helpSystemModal').classList.remove('hidden'); }
+        function closeHelpModal() { document.getElementById('helpSystemModal').classList.add('hidden'); }
+        function openClimateModal() { document.getElementById('climateModal').classList.remove('hidden'); }
+        function closeClimateModal() { document.getElementById('climateModal').classList.add('hidden'); }
 
         // --- BRANGKAS (VAULT) LOGIC ---
         function openVaultModal() {
-            document.getElementById('vaultUser').value = '';
-            document.getElementById('vaultPass').value = '';
+            document.getElementById('vaultUser').value = ''; document.getElementById('vaultPass').value = '';
             document.getElementById('vaultError').classList.add('hidden');
             document.getElementById('vaultModal').classList.remove('hidden');
             setTimeout(() => document.getElementById('vaultUser').focus(), 100);
         }
-
-        function closeVaultModal() {
-            document.getElementById('vaultModal').classList.add('hidden');
-        }
+        function closeVaultModal() { document.getElementById('vaultModal').classList.add('hidden'); }
 
         function authenticateVault(e) {
             e.preventDefault();
@@ -936,20 +1042,18 @@
             const box = document.getElementById('vaultBox');
             
             if(user === 'yusufhadin26' && pass === 'yusuf2026h') {
-                errorMsg.classList.add('hidden');
-                closeVaultModal();
+                errorMsg.classList.add('hidden'); closeVaultModal();
                 if(typeof speakBot === 'function') speakBot("Otentikasi berhasil. Membuka brangkas database induk.");
                 window.open('https://drive.google.com/drive/folders/1yLgT_a6f35jxaEThoHVdqNSmuNmprdh6?usp=sharing', '_blank');
             } else {
                 errorMsg.classList.remove('hidden');
-                box.classList.add('animate-shake');
-                setTimeout(() => box.classList.remove('animate-shake'), 400);
+                box.classList.add('animate-shake'); setTimeout(() => box.classList.remove('animate-shake'), 400);
                 if(typeof speakBot === 'function') speakBot("Akses ditolak. Nama pengguna atau kata sandi tidak valid.");
             }
         }
 
-        /* --- CHATBOT & SIRI TTS LOGIC --- */
-        let isMuted = true;
+        // --- CHATBOT & SIRI TTS LOGIC ---
+        let isMuted = true; // Default Mute
         function toggleMute() {
             isMuted = !isMuted;
             document.getElementById('chatMuteIcon').className = isMuted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
@@ -957,8 +1061,7 @@
         }
 
         const synth = window.speechSynthesis;
-        let botVoice = null;
-        let availableVoices = [];
+        let botVoice = null; let availableVoices = [];
 
         function loadVoices() {
             availableVoices = synth.getVoices();
@@ -968,9 +1071,7 @@
                 voiceSelect.innerHTML = '';
                 availableVoices.forEach((v, i) => {
                     const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = `${v.name} (${v.lang})`;
-                    voiceSelect.appendChild(option);
+                    option.value = i; option.textContent = `${v.name} (${v.lang})`; voiceSelect.appendChild(option);
                 });
             }
             const savedVoiceIndex = localStorage.getItem('dssBotVoiceIndex');
@@ -986,9 +1087,9 @@
 
         function changeBotVoice() {
             const voiceSelect = document.getElementById('voiceSelect');
-            const selectedIndex = voiceSelect.value;
-            botVoice = availableVoices[selectedIndex];
-            localStorage.setItem('dssBotVoiceIndex', selectedIndex);
+            botVoice = availableVoices[voiceSelect.value];
+            localStorage.setItem('dssBotVoiceIndex', voiceSelect.value);
+            isMuted = false; document.getElementById('chatMuteIcon').className = 'fa-solid fa-volume-high';
             speakBot("Gaya tema suara SIRI AI berhasil diubah sesuai preferensi Anda.");
             closeVoiceSettingsModal();
         }
@@ -1015,19 +1116,16 @@
             const panel = document.getElementById('floatingChatPanel');
             const icon = document.getElementById('botToggleIcon');
             if (panel.style.display === 'flex' || panel.style.display === '') {
-                panel.style.display = 'none';
-                icon.className = "fa-solid fa-robot text-lg sm:text-xl text-white";
+                panel.style.display = 'none'; icon.className = "fa-solid fa-robot text-lg sm:text-xl text-white";
             } else {
-                panel.style.display = 'flex';
-                icon.className = "fa-solid fa-xmark text-lg sm:text-xl text-white";
-                speakBot("Sistem JARVIS terhubung secara penuh. Ada yang bisa saya bantu terkait pengelolaan sedimen pesisir?");
+                panel.style.display = 'flex'; icon.className = "fa-solid fa-xmark text-lg sm:text-xl text-white";
+                speakBot("Sistem JARVIS terhubung secara penuh. Anda dapat memerintah saya untuk mencari lokasi global atau prediksi iklim.");
             }
         }
         
         function toggleFloatingButtons() {
             const grp = document.getElementById('floatingButtonsGroup');
             const icon = document.getElementById('toggleFloatingIcon');
-            
             if (grp.classList.contains('translate-x-[150%]')) {
                 grp.classList.remove('translate-x-[150%]', 'opacity-0', 'pointer-events-none');
                 grp.classList.add('translate-x-0', 'opacity-100');
@@ -1039,14 +1137,43 @@
             }
         }
 
+        // --- SPEECH TO TEXT (MIC) LOGIC ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition; let isDictating = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'id-ID';
+
+            recognition.onstart = function() {
+                isDictating = true;
+                document.querySelector('#micBtn i').className = 'fa-solid fa-microphone-lines animate-pulse text-rose-400';
+                document.getElementById('chatInputField').placeholder = "Mendengarkan...";
+            };
+
+            recognition.onresult = function(event) {
+                document.getElementById('chatInputField').value = event.results[0][0].transcript;
+                processUserChatMessage(); 
+            };
+
+            recognition.onerror = function() { stopDictationUI(); document.getElementById('chatInputField').placeholder = "Tanya informasi pesisir, cari lokasi..."; };
+            recognition.onend = function() { isDictating = false; stopDictationUI(); document.getElementById('chatInputField').placeholder = "Tanya informasi pesisir, cari lokasi..."; };
+        }
+
+        function stopDictationUI() { document.querySelector('#micBtn i').className = 'fa-solid fa-microphone text-emerald-400'; }
+        function toggleDictation() {
+            if (!SpeechRecognition) { alert("Browser Anda tidak mendukung Voice Recognition. Gunakan Chrome."); return; }
+            if (isDictating) recognition.stop(); else recognition.start();
+        }
+
         function triggerChatShortcut(action) {
             try {
                 const chatBox = document.getElementById('chatContainer');
                 let userText = "";
-                
                 if (action === 'status_pesisir') userText = "Bagaimana status keberlanjutan sedimen pesisir saat ini?";
                 else if (action === 'simulasi_vensim') userText = "Jelaskan hasil simulasi Vensim berdasarkan parameter saat ini.";
                 else if (action === 'programmer') userText = "Siapa peneliti/developer aplikasi ini?";
+                else if (action === 'iklim') userText = "Tampilkan status Angin Muson dan Iklim (ENSO) saat ini.";
 
                 chatBox.innerHTML += `<div class="flex justify-end mt-3"><div class="bg-emerald-700 text-white p-3 rounded-l-xl rounded-br-xl text-xs shadow-md max-w-[85%] font-bold">${userText}</div></div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
@@ -1062,45 +1189,43 @@
 
                 setTimeout(() => {
                     document.getElementById(typingId)?.remove();
-                    
                     let reply = ""; let ttsOutput = "";
+                    
                     if(action === 'status_pesisir') {
-                        const iks = document.getElementById('iks-score').innerText;
-                        const iksStat = document.getElementById('iks-status').innerText;
-                        
+                        const iks = document.getElementById('iks-score').innerText; const iksStat = document.getElementById('iks-status').innerText;
                         reply = `<div class="bg-slate-900 border-l-4 border-emerald-500 p-2.5 rounded shadow-md text-xs font-sans">
                             <h4 class="font-black text-emerald-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-chart-pie"></i> Status Keberlanjutan Pesisir</h4>
                             <p class="text-slate-300 mt-2 leading-relaxed text-justify">Berdasarkan data dashboard saat ini, Indeks Keberlanjutan Sedimen (IKS) berada pada angka <b>${iks}</b> dengan status <b>${iksStat}</b>.</p>
-                            <p class="text-slate-300 mt-2 leading-relaxed text-justify">Faktor laju sedimentasi mencapai 2.4 mm/tahun dengan luas tutupan mangrove sekitar 67.8 Ha. Terus pantau fluktuasi debit dari DAS untuk mencegah risiko abrasi atau sedimentasi berlebih.</p>
                         </div>`;
                         ttsOutput = `Status keberlanjutan pesisir saat ini menunjukkan Indeks Keberlanjutan Sedimen sebesar ${iks}, dengan status ${iksStat}.`;
                     } else if(action === 'simulasi_vensim') {
-                        const debit = document.getElementById('lbl-debit').innerText;
-                        const mangrove = document.getElementById('lbl-mangrove').innerText;
-                        const keruk = document.getElementById('lbl-keruk').innerText;
-                        const abrasi = document.getElementById('val-abrasi').innerText;
-                        const sedimen = document.getElementById('val-sedimen').innerText;
-                        const tambak = document.getElementById('val-tambak').innerText;
+                        const debit = document.getElementById('lbl-debit').innerText; const mangrove = document.getElementById('lbl-mangrove').innerText; const keruk = document.getElementById('lbl-keruk').innerText;
+                        const abrasi = document.getElementById('val-abrasi').innerText; const sedimen = document.getElementById('val-sedimen').innerText; const tambak = document.getElementById('val-tambak').innerText;
 
                         reply = `<div class="bg-slate-900 border-l-4 border-blue-500 p-2.5 rounded shadow-md text-xs font-sans">
-                            <h4 class="font-black text-blue-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-project-diagram"></i> Hasil Simulasi Sistem Dinamis (Vensim)</h4>
+                            <h4 class="font-black text-blue-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-project-diagram"></i> Hasil Simulasi Vensim</h4>
                             <ul class="list-disc pl-4 text-slate-300 space-y-1.5 mt-2">
-                                <li><b>Parameter Input:</b> Debit Sungai: ${debit} | Rehabilitasi Mangrove: ${mangrove} | Pengerukan: ${keruk}.</li>
-                                <li><b>Risiko Abrasi/Erosi:</b> <span class="${abrasi.includes('Aman') ? 'text-emerald-400' : 'text-red-400'} font-bold">${abrasi}</span>.</li>
-                                <li><b>Akumulasi Sedimen Kotor:</b> <span class="font-bold text-amber-400">${sedimen}</span>.</li>
-                                <li><b>Kualitas Ekologi Tambak:</b> <span class="font-bold text-blue-400">${tambak}</span>.</li>
+                                <li><b>Parameter Input:</b> Debit Sungai: ${debit} | Mangrove: ${mangrove} | Pengerukan: ${keruk}.</li>
+                                <li><b>Risiko Abrasi:</b> <span class="${abrasi.includes('Aman') ? 'text-emerald-400' : 'text-red-400'} font-bold">${abrasi}</span>.</li>
+                                <li><b>Akumulasi Sedimen:</b> <span class="font-bold text-amber-400">${sedimen}</span>.</li>
+                                <li><b>Kualitas Tambak:</b> <span class="font-bold text-blue-400">${tambak}</span>.</li>
                             </ul>
-                            <p class="text-slate-400 mt-2 text-[10px] italic">Gunakan slider intervensi untuk melihat perubahan kausalitas sistem.</p>
                         </div>`;
-                        ttsOutput = `Berdasarkan parameter input Vensim. Debit sungai ${debit}, Mangrove ${mangrove}, dan Pengerukan ${keruk}. Menghasilkan tingkat abrasi ${abrasi}, akumulasi sedimen ${sedimen}, dan kualitas ekologi tambak ${tambak}.`;
+                        ttsOutput = `Berdasarkan parameter Vensim saat ini. Risiko abrasi terpantau ${abrasi}, dan kualitas ekologi tambak berada pada level ${tambak}.`;
                     } else if(action === 'programmer') {
                         reply = `<div class="bg-slate-900 border border-fuchsia-500 rounded-xl p-3 text-xs shadow-lg font-mono text-center">
                             <h4 class="font-black text-fuchsia-400 mb-2 uppercase text-sm">YUSUF HADI NUGROHO</h4>
                             <p class="text-emerald-400 font-bold mb-1 text-[10px]">NIM: 21010124520008</p>
                             <p class="text-slate-300 mb-3 text-[10px]">Program Doktor Ilmu Teknik Sipil - UNDIP</p>
-                            <a href="mailto:yusufhadinugroho@students.undip.ac.id" class="text-white block mt-2 hover:text-emerald-400 transition-colors"><i class="fa-solid fa-envelope text-emerald-400 w-5"></i> Email Mahasiswa</a>
                         </div>`;
-                        ttsOutput = "Aplikasi ini merupakan bagian dari Disertasi yang disusun oleh Yusuf Hadi Nugroho, dari Program Doktor Ilmu Teknik Sipil Universitas Diponegoro.";
+                        ttsOutput = "Aplikasi ini disusun oleh Yusuf Hadi Nugroho, dari Program Doktor Ilmu Teknik Sipil Universitas Diponegoro.";
+                    } else if(action === 'iklim') {
+                        openClimateModal();
+                        reply = `<div class="bg-slate-900 border-l-4 border-teal-500 p-2.5 rounded shadow-md text-xs font-sans">
+                            <h4 class="font-black text-teal-400 mb-1.5 uppercase tracking-wider border-b border-slate-700 pb-1"><i class="fa-solid fa-cloud-sun-rain"></i> Analisis Iklim</h4>
+                            <p class="text-slate-300 mt-2 leading-relaxed text-justify">Dashboard iklim terbuka di layar utama. Menampilkan proyeksi vektor angin muson dan indeks <b>ENSO</b> terkini.</p>
+                        </div>`;
+                        ttsOutput = "Menampilkan data siklus angin muson, La Nina, dan El Nino pada dasbor antarmuka iklim.";
                     }
                     
                     chatBox.innerHTML += `<div class="flex gap-2.5 mt-3">
@@ -1115,48 +1240,79 @@
                     
                 }, 800); 
 
-            } catch(error) {
-                console.error("Chat shortcut error:", error);
-            }
+            } catch(error) { console.error(error); }
         }
 
-        async function processUserChatMessage() {
+        async function processUserChatMessage(isFromMap = false) {
             const input = document.getElementById('chatInputField');
             const msg = input.value.trim();
             if(!msg) return;
+            
             const chatBox = document.getElementById('chatContainer');
             chatBox.innerHTML += `<div class="flex justify-end mt-3"><div class="bg-emerald-700 text-white p-3 rounded-l-xl rounded-br-xl text-xs shadow-md max-w-[85%] font-bold">${msg}</div></div>`;
             input.value = ""; chatBox.scrollTop = chatBox.scrollHeight;
+
+            const msgLower = msg.toLowerCase();
+            // Cek perintah spesifik iklim
+            if(msgLower.includes('muson') || msgLower.includes('el nino') || msgLower.includes('la nina') || msgLower.includes('iklim') || msgLower.includes('cuaca')) {
+                openClimateModal();
+                appendBotReply(`<b class="text-teal-400 uppercase text-xs border-b border-teal-800 pb-1.5 mb-2 block font-mono"><i class="fa-solid fa-cloud-sun-rain"></i> Analisis Iklim</b><p class="text-justify text-xs mb-3 text-slate-200">Dasbor prediksi Angin Muson dan ENSO telah dibuka di layar utama.</p>`, "Menampilkan prediksi angin muson, La Nina, dan El Nino pada antarmuka sistem klimatik.");
+                return;
+            }
 
             const typingId = 'typ' + Date.now();
             chatBox.innerHTML += `<div id="${typingId}" class="flex gap-2.5 mt-3">
                         <div class="bg-slate-900 border border-emerald-600/50 h-7 w-7 rounded flex items-center justify-center flex-shrink-0 text-emerald-400"><i class="fa-solid fa-robot text-xs fa-spin"></i></div>
                         <div class="bg-slate-900 border border-slate-800 p-3 rounded-r-xl rounded-bl-xl text-slate-400 text-xs w-full shadow-md leading-relaxed animate-pulse">
-                            Mencari di Wikipedia...
+                            Mencari melalui Jaringan Global...
                         </div>
                     </div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const url = `https://id.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exsentences=3&exintro=1&explaintext=1&generator=search&gsrsearch=${encodeURIComponent(msg)}&gsrlimit=1&origin=*`;
+                // Search Wiki
+                const cleanMsg = msg.replace(/cari|lokasi|dimana/gi, '').trim();
+                const url = `https://id.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exsentences=3&exintro=1&explaintext=1&generator=search&gsrsearch=${encodeURIComponent(cleanMsg)}&gsrlimit=1&origin=*`;
                 const res = await fetch(url);
                 const data = await res.json();
                 document.getElementById(typingId)?.remove();
 
                 let reply = ""; let ttsOutput = "";
-                const gUrl = `https://www.google.com/search?q=${encodeURIComponent(msg)}`;
+                const gUrl = `https://www.google.com/search?q=${encodeURIComponent(cleanMsg)}`;
                 
                 if(data.query && data.query.pages) {
                     const page = Object.values(data.query.pages)[0];
-                    reply = `<b class="text-emerald-400 uppercase text-xs border-b border-emerald-800 pb-1.5 mb-2 block font-mono"><i class="fa-brands fa-wikipedia-w"></i> ${page.title}</b><p class="text-justify text-xs mb-3 text-slate-200 leading-relaxed">${page.extract}</p>
-                    <div class="flex flex-col gap-1.5 mt-2 font-mono">
-                        <a href="https://id.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}" target="_blank" class="text-[10px] text-slate-300 bg-slate-950 p-2 border border-slate-700 rounded hover:text-white flex items-center gap-2"><i class="fa-brands fa-wikipedia-w text-emerald-400"></i> Baca selengkapnya</a>
-                        <a href="${gUrl}" target="_blank" class="text-[10px] text-slate-300 bg-slate-950 p-2 border border-slate-700 rounded hover:text-white flex items-center gap-2"><i class="fa-brands fa-google text-blue-400"></i> Cari di Google</a>
-                    </div>`;
-                    ttsOutput = `Menurut Wikipedia mengenai ${page.title}: ${page.extract}`;
+                    reply = `<b class="text-emerald-400 uppercase text-xs border-b border-emerald-800 pb-1.5 mb-2 block font-mono"><i class="fa-brands fa-wikipedia-w"></i> ${page.title}</b><p class="text-justify text-xs mb-3 text-slate-200 leading-relaxed">${page.extract}</p>`;
+                    ttsOutput = `Informasi ditemukan. ${page.extract}`;
+                    
+                    // GEOCODING SYNC TO MAP
+                    try {
+                        const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(page.title)}&limit=1`;
+                        const geoRes = await fetch(geoUrl);
+                        const geoData = await geoRes.json();
+                        
+                        if(geoData && geoData.length > 0) {
+                            const lat = parseFloat(geoData[0].lat); const lon = parseFloat(geoData[0].lon);
+                            
+                            if(document.getElementById('mapWeatherFlipper').classList.contains('flipped')) { toggleMapWeatherFlip('map'); }
+                            map.flyTo([lat, lon], 12, {animate: true, duration: 1.5});
+                            
+                            const searchMarker = L.circleMarker([lat, lon], { radius: 10, fillColor: "#d946ef", color: "#ffffff", weight: 2, fillOpacity: 0.9, className: 'animate-pulse' }).addTo(dynamicMapLayers);
+                            searchMarker.bindTooltip(`
+                                <div class="text-[11px] max-w-[200px] whitespace-normal">
+                                    <strong class="font-bold text-white"><i class="fa-solid fa-location-dot text-fuchsia-400"></i> ${page.title}</strong><br>
+                                    <span class="text-slate-300 text-[9px] block mt-1 line-clamp-3">${page.extract}</span>
+                                </div>
+                            `, { direction: 'top', className: 'custom-tooltip', permanent: true }).openTooltip();
+                            
+                            reply += `<div class="mt-2.5 bg-fuchsia-950/40 border border-fuchsia-500/50 p-2 rounded"><p class="text-[10px] text-fuchsia-400 font-bold font-mono"><i class="fa-solid fa-satellite-dish animate-pulse"></i> SINKRONISASI PETA AKTIF</p><p class="text-[9px] text-slate-300 mt-0.5">Kamera GIS terfokus ke koordinat [${lat.toFixed(3)}, ${lon.toFixed(3)}].</p></div>`;
+                            ttsOutput += ` Lokasi tersebut juga berhasil disinkronisasikan ke peta GIS utama.`;
+                        }
+                    } catch(geoErr) { console.warn("Geocoding failed", geoErr); }
+
                 } else {
                     reply = `<p class="text-xs text-amber-400 mb-3"><i class="fa-solid fa-triangle-exclamation"></i> Topik tidak ditemukan di ensiklopedia.</p>
-                    <a href="${gUrl}" target="_blank" class="text-[10px] bg-slate-950 border border-slate-700 p-2 rounded block text-slate-200 hover:text-white font-mono flex items-center gap-2"><i class="fa-brands fa-google text-blue-400"></i> Cari "${msg}" di Google</a>`;
+                    <a href="${gUrl}" target="_blank" class="text-[10px] bg-slate-950 border border-slate-700 p-2 rounded block text-slate-200 hover:text-white font-mono flex items-center gap-2"><i class="fa-brands fa-google text-blue-400"></i> Cari "${cleanMsg}" di Google</a>`;
                     ttsOutput = "Data spesifik tidak ditemukan. Silahkan gunakan tautan Google yang saya sediakan.";
                 }
                 appendBotReply(reply, ttsOutput);
@@ -1181,85 +1337,20 @@
             }, 300);
         }
 
-        /* --- SPEECH TO TEXT (MIC) LOGIC --- */
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        let isDictating = false;
-
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'id-ID';
-
-            recognition.onstart = function() {
-                isDictating = true;
-                const micIcon = document.querySelector('#micBtn i');
-                micIcon.className = 'fa-solid fa-microphone-lines animate-pulse text-rose-400';
-                document.getElementById('chatInputField').placeholder = "Mendengarkan...";
-            };
-
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('chatInputField').value = transcript;
-            };
-
-            recognition.onerror = function(event) {
-                console.error("Speech recognition error", event.error);
-                stopDictationUI();
-                document.getElementById('chatInputField').placeholder = "Gagal mendengar...";
-                setTimeout(() => {
-                    document.getElementById('chatInputField').placeholder = "Tanya informasi pesisir, sedimen, dll...";
-                }, 2000);
-            };
-
-            recognition.onend = function() {
-                isDictating = false;
-                stopDictationUI();
-                document.getElementById('chatInputField').placeholder = "Tanya informasi pesisir, sedimen, dll...";
-            };
-        }
-
-        function stopDictationUI() {
-            const micIcon = document.querySelector('#micBtn i');
-            micIcon.className = 'fa-solid fa-microphone text-emerald-400';
-        }
-
-        function toggleDictation() {
-            if (!SpeechRecognition) {
-                alert("Browser Anda tidak mendukung fitur Voice Recognition. Silakan gunakan Google Chrome.");
-                return;
-            }
-            if (isDictating) {
-                recognition.stop();
-            } else {
-                recognition.start();
-            }
-        }
-
-        /* --- SCREENSAVER & TIMERS LOGIC --- */
-        let idleTime = 0;
-        let ssLock = false; 
-        let wisdomInterval = null;
+        // --- SCREENSAVER & TIMERS LOGIC ---
+        let idleTime = 0; let ssLock = false; let wisdomInterval = null;
         
         const wisdomQuotes = [
             "Mangrove yang kau tanam hari ini, adalah perisai pelindung pesisir di esok hari.",
-            "Sedimentasi bukan sekadar tumpukan tanah, ia adalah saksi bisu perjalanan aliran sungai menuju muara.",
-            "Keseimbangan alam berawal dari perencanaan tata ruang yang bijak dan terukur.",
-            "Akal buatan (AI) membantu merumuskan keputusan, namun kearifan manusia yang menentukan masa depan.",
+            "Sedimentasi bukan sekadar tumpukan tanah, ia adalah saksi bisu perjalanan aliran sungai.",
+            "Keseimbangan alam berawal dari tata ruang yang bijak dan terukur.",
+            "Akal buatan (AI) merumuskan keputusan, namun kearifan manusia yang menentukan.",
             "Setiap butir pasir pesisir menyimpan keseimbangan ekosistem yang rapuh.",
-            "Pembangunan berkelanjutan adalah merawat warisan alam untuk kelestarian generasi yang akan datang.",
-            "Memahami dinamika lautan berarti mengerti cara alam menyelaraskan dirinya kembali.",
-            "Keputusan dan ketepatan intervensi hari ini mencegah bencana abrasi dan ekologi di kemudian hari.",
-            "Sinergi antara daratan dan lautan adalah kunci ketahanan pesisir sejati.",
-            "Data adalah lensa untuk melihat kebenaran yang tak kasat mata dari dinamika sedimen."
+            "Memahami dinamika lautan berarti mengerti cara alam menyelaraskan dirinya.",
+            "Keputusan dan ketepatan intervensi hari ini mencegah bencana abrasi esok hari.",
+            "Sinergi antara daratan dan lautan adalah kunci ketahanan pesisir sejati."
         ];
-
-        const wisdomColors = [
-            "from-emerald-900/80 to-teal-900/80 border-emerald-400 text-emerald-100",
-            "from-blue-900/80 to-cyan-900/80 border-cyan-400 text-cyan-100",
-            "from-amber-900/80 to-orange-900/80 border-amber-400 text-amber-100"
-        ];
+        const wisdomColors = ["from-emerald-900/80 to-teal-900/80 border-emerald-400 text-emerald-100", "from-blue-900/80 to-cyan-900/80 border-cyan-400 text-cyan-100", "from-amber-900/80 to-orange-900/80 border-amber-400 text-amber-100"];
 
         function updateClocks() {
             const now = new Date();
@@ -1269,24 +1360,17 @@
             const timeStr = now.toLocaleTimeString('id-ID');
             const dateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`.toUpperCase();
             
-            const chatTime = document.getElementById('chatTime');
-            if(chatTime) chatTime.innerText = timeStr;
-            const chatDateElem = document.getElementById('chatDate');
-            if(chatDateElem) chatDateElem.innerText = dateStr;
+            const chatTime = document.getElementById('chatTime'); if(chatTime) chatTime.innerText = timeStr;
+            const chatDateElem = document.getElementById('chatDate'); if(chatDateElem) chatDateElem.innerText = dateStr;
 
-            const scTime = document.getElementById('scTime');
-            if(scTime) scTime.innerText = timeStr;
-            const scDate = document.getElementById('scDate');
-            if(scDate) scDate.innerText = dateStr;
+            const scTime = document.getElementById('scTime'); if(scTime) scTime.innerText = timeStr;
+            const scDate = document.getElementById('scDate'); if(scDate) scDate.innerText = dateStr;
 
-            const tdTime = document.getElementById('topDashTime');
-            if(tdTime) tdTime.innerText = timeStr;
-            const tdDate = document.getElementById('topDashDate');
-            if(tdDate) tdDate.innerText = dateStr;
+            const tdTime = document.getElementById('topDashTime'); if(tdTime) tdTime.innerText = timeStr;
+            const tdDate = document.getElementById('topDashDate'); if(tdDate) tdDate.innerText = dateStr;
         }
 
-        setInterval(updateClocks, 1000);
-        updateClocks();
+        setInterval(updateClocks, 1000); updateClocks();
 
         function resetTimer(e) { 
             if(ssLock) return; 
@@ -1308,152 +1392,87 @@
             if (idleTime > 60) {
                 const ss = document.getElementById('screensaverScreen');
                 if (ss.style.display !== 'flex') {
-                    ss.style.display = 'flex';
-                    setTimeout(() => ss.style.opacity = 1, 50);
-                    
+                    ss.style.display = 'flex'; setTimeout(() => ss.style.opacity = 1, 50);
                     if(wisdomInterval) clearInterval(wisdomInterval);
-                    cycleWisdomQuote();
-                    wisdomInterval = setInterval(cycleWisdomQuote, 10000);
+                    cycleWisdomQuote(); wisdomInterval = setInterval(cycleWisdomQuote, 10000);
                 }
             }
         }, 1000);
 
-        function deactivateScreensaver() {
-            if(ssLock) return;
-            resetTimer();
-        }
+        function deactivateScreensaver() { if(ssLock) return; resetTimer(); }
 
         function activateScreensaverManual(e) {
-            if(e) e.stopPropagation(); 
-            
-            ssLock = true; 
-            setTimeout(() => { ssLock = false; }, 1500); 
-
+            if(e) e.stopPropagation(); ssLock = true; setTimeout(() => { ssLock = false; }, 1500); 
             idleTime = 61; 
             const ss = document.getElementById('screensaverScreen');
-            ss.style.display = 'flex';
-            setTimeout(() => ss.style.opacity = 1, 50);
-            
+            ss.style.display = 'flex'; setTimeout(() => ss.style.opacity = 1, 50);
             if(wisdomInterval) clearInterval(wisdomInterval);
-            cycleWisdomQuote();
-            wisdomInterval = setInterval(cycleWisdomQuote, 10000); 
+            cycleWisdomQuote(); wisdomInterval = setInterval(cycleWisdomQuote, 10000); 
         }
 
         function cycleWisdomQuote() {
             const quoteContainer = document.getElementById('wisdomQuoteContainer');
             const quoteText = document.getElementById('wisdomQuoteText');
-            
             const randomQuote = wisdomQuotes[Math.floor(Math.random() * wisdomQuotes.length)];
             const randomColorClass = wisdomColors[Math.floor(Math.random() * wisdomColors.length)];
             
-            quoteContainer.classList.remove('wisdom-active');
-            void quoteContainer.offsetWidth; 
-            
+            quoteContainer.classList.remove('wisdom-active'); void quoteContainer.offsetWidth; 
             quoteContainer.className = `text-xl sm:text-3xl font-black font-sans leading-relaxed tracking-wide min-h-[100px] flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] px-4 py-6 rounded-2xl backdrop-blur-md border-t-2 border-b-2 bg-gradient-to-r wisdom-active ${randomColorClass}`;
             quoteText.innerText = `"${randomQuote}"`;
-            
-            if(!isMuted && document.getElementById('screensaverScreen').style.display !== 'none') {
-                speakBot(randomQuote);
-            }
+            if(!isMuted && document.getElementById('screensaverScreen').style.display !== 'none') speakBot(randomQuote);
         }
 
         /* --- 3D EARTH INITIALIZATION FOR SCREENSAVER --- */
-        let earthScene, earthCamera, earthRenderer, earthMesh, cloudMesh;
-        let earthGroup;
+        let earthScene, earthCamera, earthRenderer, earthMesh, cloudMesh, earthGroup;
         function initEarth() {
             const container = document.getElementById('earth-container');
             if(!container) return;
-            
-            const W = 500;
-            const H = 500;
+            const W = 500; const H = 500;
             
             earthScene = new THREE.Scene();
-            earthCamera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-            earthCamera.position.z = 4.5;
-            
-            earthRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            earthRenderer.setSize(W, H);
+            earthCamera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100); earthCamera.position.z = 4.5;
+            earthRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); earthRenderer.setSize(W, H);
             
             const resizeObserver = new ResizeObserver(entries => {
                 for (let entry of entries) {
                     const { width, height } = entry.contentRect;
-                    if(width > 0 && height > 0) {
-                        earthCamera.aspect = width / height;
-                        earthCamera.updateProjectionMatrix();
-                        earthRenderer.setSize(width, height);
-                    }
+                    if(width > 0 && height > 0) { earthCamera.aspect = width / height; earthCamera.updateProjectionMatrix(); earthRenderer.setSize(width, height); }
                 }
             });
             resizeObserver.observe(container);
-            
             container.appendChild(earthRenderer.domElement);
 
-            earthGroup = new THREE.Group();
-            earthScene.add(earthGroup);
-
-            const tl = new THREE.TextureLoader();
-            tl.setCrossOrigin('anonymous'); 
-            
-            const earthTex = tl.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg', function(){
-                if(earthMesh) earthMesh.material.needsUpdate = true;
-            });
+            earthGroup = new THREE.Group(); earthScene.add(earthGroup);
+            const tl = new THREE.TextureLoader(); tl.setCrossOrigin('anonymous'); 
+            const earthTex = tl.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg', function(){ if(earthMesh) earthMesh.material.needsUpdate = true; });
             const specTex = tl.load('https://unpkg.com/three-globe/example/img/earth-water.png');
             const cloudTex = tl.load('https://unpkg.com/three-globe/example/img/earth-clouds.png');
 
             const earthGeo = new THREE.SphereGeometry(1.5, 64, 64);
-            const earthMat = new THREE.MeshPhongMaterial({ 
-                map: earthTex,
-                specularMap: specTex,
-                specular: new THREE.Color(0x333333),
-                shininess: 15
-            });
-            earthMesh = new THREE.Mesh(earthGeo, earthMat);
-            earthGroup.add(earthMesh);
+            const earthMat = new THREE.MeshPhongMaterial({ map: earthTex, specularMap: specTex, specular: new THREE.Color(0x333333), shininess: 15 });
+            earthMesh = new THREE.Mesh(earthGeo, earthMat); earthGroup.add(earthMesh);
 
             const cloudGeo = new THREE.SphereGeometry(1.52, 64, 64);
-            const cloudMat = new THREE.MeshPhongMaterial({
-                map: cloudTex,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending,
-                side: THREE.FrontSide,
-                depthWrite: false
-            });
-            cloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
-            earthGroup.add(cloudMesh);
+            const cloudMat = new THREE.MeshPhongMaterial({ map: cloudTex, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, side: THREE.FrontSide, depthWrite: false });
+            cloudMesh = new THREE.Mesh(cloudGeo, cloudMat); earthGroup.add(cloudMesh);
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-            earthScene.add(ambient);
-            const spotLight = new THREE.SpotLight(0xffffff, 2.5);
-            spotLight.position.set(5, 3, 5);
-            earthScene.add(spotLight);
-            
-            const backLight = new THREE.SpotLight(0x10b981, 0.5);
-            backLight.position.set(-5, -3, -5);
-            earthScene.add(backLight);
+            earthScene.add(new THREE.AmbientLight(0xffffff, 0.4));
+            const spotLight = new THREE.SpotLight(0xffffff, 2.5); spotLight.position.set(5, 3, 5); earthScene.add(spotLight);
+            const backLight = new THREE.SpotLight(0x10b981, 0.5); backLight.position.set(-5, -3, -5); earthScene.add(backLight);
             
             animateEarth();
         }
         
         function animateEarth() {
             requestAnimationFrame(animateEarth);
-            if(earthMesh) {
-                earthMesh.rotation.y += 0.002;
-                earthMesh.rotation.x = 0.2; 
-            }
-            if(cloudMesh) {
-                cloudMesh.rotation.y += 0.0025; 
-            }
-            if(document.getElementById('screensaverScreen').style.display !== 'none') {
-                earthRenderer.render(earthScene, earthCamera);
-            }
+            if(earthMesh) { earthMesh.rotation.y += 0.002; earthMesh.rotation.x = 0.2; }
+            if(cloudMesh) cloudMesh.rotation.y += 0.0025; 
+            if(document.getElementById('screensaverScreen').style.display !== 'none') earthRenderer.render(earthScene, earthCamera);
         }
 
         window.onload = () => { 
-            switchPilar(1); 
-            jalankanSimulasiVensim();
-            setTimeout(loadVoices, 500);
-            initEarth();
+            switchPilar(1); jalankanSimulasiVensim();
+            setTimeout(loadVoices, 500); initEarth();
         };
     </script>
 </body>
