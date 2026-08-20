@@ -57,7 +57,7 @@
         .custom-tooltip {
             background: var(--tooltip-bg) !important; border: 1px solid var(--tooltip-border) !important;
             color: var(--tooltip-text) !important; border-radius: 6px !important; padding: 4px 8px !important;
-            font-family: 'JetBrains Mono', monospace !important; font-size: 11px !important;
+            font-family: 'JetBrains Mono', monospace !important; font-size: 11px !important; z-index: 9999 !important;
         }
         .leaflet-top.leaflet-left { top: 85px !important; }
         .audio-speaking { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8); border-color: #10b981 !important; }
@@ -163,24 +163,24 @@
 
                 <div class="flex flex-col items-end gap-1.5 w-full md:w-auto">
                     <div class="flex flex-wrap items-center gap-1.5 w-full justify-stretch sm:justify-end">
-                        <button type="button" onclick="openScenarioModal()" class="bg-indigo-950 text-indigo-300 border border-indigo-500/60 text-xs font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-indigo-900 transition-all flex items-center gap-1.5 shadow-md">
+                        <button type="button" onclick="openScenarioModal()" class="bg-indigo-950 text-indigo-300 border border-indigo-500/60 text-xs font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-indigo-900 transition-all flex items-center gap-1.5 shadow-md cursor-pointer">
                             <i class="fa-solid fa-code-compare"></i> <span>BANDINGKAN SKENARIO</span>
                         </button>
-                        <button type="button" onclick="openPolicyBriefModal()" class="bg-amber-950 text-amber-300 border border-amber-500/60 text-xs font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-amber-900 transition-all flex items-center gap-1.5 shadow-md">
+                        <button type="button" onclick="openPolicyBriefModal()" class="bg-amber-950 text-amber-300 border border-amber-500/60 text-xs font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-amber-900 transition-all flex items-center gap-1.5 shadow-md cursor-pointer">
                             <i class="fa-solid fa-file-invoice"></i> <span>POLICY BRIEF</span>
                         </button>
-                        <button type="button" onclick="openFieldDataModal()" class="bg-cyan-950 text-cyan-300 border border-cyan-500/60 text-xs font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-cyan-900 transition-all flex items-center gap-1.5 shadow-md">
+                        <button type="button" onclick="openFieldDataModal()" class="bg-cyan-950 text-cyan-300 border border-cyan-500/60 text-xs font-mono font-bold px-3 py-1.5 rounded-lg hover:bg-cyan-900 transition-all flex items-center gap-1.5 shadow-md cursor-pointer">
                             <i class="fa-solid fa-database"></i> <span>DATA RIIL PPT</span>
                         </button>
                     </div>
                     <div class="flex flex-wrap items-center gap-1.5 w-full justify-stretch sm:justify-end">
-                        <button type="button" onclick="openVaultModal()" class="bg-blue-950 text-blue-400 text-[11px] font-mono font-bold px-2.5 py-1 rounded border border-blue-500/50 hover:bg-blue-900 flex items-center gap-1">
+                        <button type="button" onclick="openVaultModal()" class="bg-blue-950 text-blue-400 text-[11px] font-mono font-bold px-2.5 py-1 rounded border border-blue-500/50 hover:bg-blue-900 flex items-center gap-1 cursor-pointer">
                             <i class="fa-brands fa-google-drive"></i> <span>G-DRIVE</span>
                         </button>
-                        <button type="button" onclick="openCreatorModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-mono font-bold px-2.5 py-1 rounded border border-slate-700 flex items-center gap-1">
+                        <button type="button" onclick="openCreatorModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-mono font-bold px-2.5 py-1 rounded border border-slate-700 flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-user-graduate text-emerald-400"></i> <span>PENELITI</span>
                         </button>
-                        <button type="button" onclick="toggleThemeInterface()" class="bg-slate-950 border border-slate-700 text-[11px] font-mono font-bold px-2.5 py-1 rounded text-slate-300 hover:bg-slate-900 flex items-center gap-1">
+                        <button type="button" onclick="toggleThemeInterface()" class="bg-slate-950 border border-slate-700 text-[11px] font-mono font-bold px-2.5 py-1 rounded text-slate-300 hover:bg-slate-900 flex items-center gap-1 cursor-pointer">
                             <i id="themeIcon" class="fa-solid fa-moon"></i> <span id="themeText">DARK</span>
                         </button>
                     </div>
@@ -259,16 +259,16 @@
                 <div class="border-t border-slate-800 pt-3">
                     <span class="text-[11px] font-mono font-bold text-slate-400 block mb-2 uppercase"><i class="fa-solid fa-layer-group text-emerald-400"></i> Layer Spasial Tambahan</span>
                     <div class="grid grid-cols-2 gap-1.5 text-xs font-mono">
-                        <button type="button" onclick="toggleGisLayer('adcp')" id="layerBtn-adcp" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-cyan-400 text-cyan-300 rounded text-[11px] flex items-center justify-between transition-colors">
+                        <button type="button" onclick="toggleGisLayer('adcp')" id="layerBtn-adcp" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-cyan-400 text-cyan-300 rounded text-[11px] flex items-center justify-between transition-colors cursor-pointer">
                             <span><i class="fa-solid fa-satellite-dish"></i> Stn ADCP</span> <span id="chk-adcp">✓</span>
                         </button>
-                        <button type="button" onclick="toggleGisLayer('poshujan')" id="layerBtn-poshujan" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-blue-400 text-blue-300 rounded text-[11px] flex items-center justify-between transition-colors">
+                        <button type="button" onclick="toggleGisLayer('poshujan')" id="layerBtn-poshujan" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-blue-400 text-blue-300 rounded text-[11px] flex items-center justify-between transition-colors cursor-pointer">
                             <span><i class="fa-solid fa-cloud-rain"></i> Pos Hujan</span> <span id="chk-poshujan">✓</span>
                         </button>
-                        <button type="button" onclick="toggleGisLayer('dsas')" id="layerBtn-dsas" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 rounded text-[11px] flex items-center justify-between transition-colors">
+                        <button type="button" onclick="toggleGisLayer('dsas')" id="layerBtn-dsas" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 rounded text-[11px] flex items-center justify-between transition-colors cursor-pointer">
                             <span><i class="fa-solid fa-chart-area"></i> Garis Pantai</span> <span id="chk-dsas">✓</span>
                         </button>
-                        <button type="button" onclick="toggleGisLayer('das')" id="layerBtn-das" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-purple-400 text-purple-300 rounded text-[11px] flex items-center justify-between transition-colors">
+                        <button type="button" onclick="toggleGisLayer('das')" id="layerBtn-das" class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-purple-400 text-purple-300 rounded text-[11px] flex items-center justify-between transition-colors cursor-pointer">
                             <span><i class="fa-solid fa-draw-polygon"></i> Poligon DAS</span> <span id="chk-das">✓</span>
                         </button>
                     </div>
@@ -283,10 +283,10 @@
                     
                     <!-- OVERLAY CONTROLS -->
                     <div class="absolute top-3 left-3 z-[70] flex flex-col gap-2 pointer-events-auto">
-                        <button type="button" onclick="toggleMapFullscreen()" class="bg-slate-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-400 hover:text-white p-2 rounded-lg shadow-lg flex items-center justify-center w-8 h-8" title="Layar Penuh">
+                        <button type="button" onclick="toggleMapFullscreen()" class="bg-slate-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-400 hover:text-white p-2 rounded-lg shadow-lg flex items-center justify-center w-8 h-8 cursor-pointer" title="Layar Penuh">
                             <i id="fullscreenIcon" class="fa-solid fa-expand text-xs"></i>
                         </button>
-                        <button type="button" onclick="toggleMapUI()" class="bg-slate-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-400 hover:text-white p-2 rounded-lg shadow-lg flex items-center justify-center w-8 h-8" title="Sembunyikan UI">
+                        <button type="button" onclick="toggleMapUI()" class="bg-slate-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-400 hover:text-white p-2 rounded-lg shadow-lg flex items-center justify-center w-8 h-8 cursor-pointer" title="Sembunyikan UI">
                             <i id="toggleMapUIIcon" class="fa-solid fa-eye-slash text-xs"></i>
                         </button>
                     </div>
@@ -353,9 +353,9 @@
                         </h2>
                         
                         <div class="flex gap-1.5 text-[11px] font-mono">
-                            <button type="button" onclick="switchChartTab('projection')" id="tabBtn-projection" class="px-2.5 py-1 rounded bg-emerald-700 text-white font-bold transition-all">PROYEKSI 2024-2040</button>
-                            <button type="button" onclick="switchChartTab('hydrograph')" id="tabBtn-hydrograph" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all">HIDROGRAF BANJIR DAS</button>
-                            <button type="button" onclick="switchChartTab('dsas')" id="tabBtn-dsas" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all">DINAMIKA GARIS PANTAI</button>
+                            <button type="button" onclick="switchChartTab('projection')" id="tabBtn-projection" class="px-2.5 py-1 rounded bg-emerald-700 text-white font-bold transition-all cursor-pointer">PROYEKSI 2024-2040</button>
+                            <button type="button" onclick="switchChartTab('hydrograph')" id="tabBtn-hydrograph" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer">HIDROGRAF BANJIR DAS</button>
+                            <button type="button" onclick="switchChartTab('dsas')" id="tabBtn-dsas" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer">DINAMIKA GARIS PANTAI</button>
                         </div>
                     </div>
 
@@ -541,7 +541,7 @@
                 <div class="flex items-center gap-2.5 text-indigo-400 font-tech font-black text-sm md:text-base uppercase tracking-wider">
                     <i class="fa-solid fa-code-compare text-lg"></i> Matriks Evaluasi Perbandingan Multi-Skenario
                 </div>
-                <button onclick="closeScenarioModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeScenarioModal()" class="text-slate-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -597,7 +597,7 @@
                     </table>
                 </div>
                 <div class="flex justify-end pt-2">
-                    <button type="button" onclick="selectScenarioPreset('hybrid'); closeScenarioModal();" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-lg font-mono text-xs uppercase">
+                    <button type="button" onclick="selectScenarioPreset('hybrid'); closeScenarioModal();" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-lg font-mono text-xs uppercase cursor-pointer">
                         Terapkan Skenario 4 (Hybrid)
                     </button>
                 </div>
@@ -612,7 +612,7 @@
                 <div class="flex items-center gap-2.5 text-cyan-400 font-tech font-black text-sm md:text-base uppercase tracking-wider">
                     <i class="fa-solid fa-database text-lg"></i> Ringkasan Data Riil Lapangan & Pengukuran PPT
                 </div>
-                <button onclick="closeFieldDataModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeFieldDataModal()" class="text-slate-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed font-mono">
                 <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800">
@@ -650,7 +650,7 @@
                 <div class="flex items-center gap-2.5 text-amber-400 font-tech font-black text-sm md:text-base uppercase tracking-wider">
                     <i class="fa-solid fa-file-contract text-lg"></i> Executive Policy Brief & Rekomendasi Tata Ruang
                 </div>
-                <button onclick="closePolicyBriefModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closePolicyBriefModal()" class="text-slate-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
                 <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center">
@@ -666,7 +666,7 @@
                     <li><b>Zonasi Silvofishery:</b> Mengintegrasikan budidaya tambak dengan pelestarian hutan bakau.</li>
                 </ul>
                 <div class="flex justify-end pt-2">
-                    <button type="button" onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg font-mono text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg font-mono text-xs flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
                     </button>
                 </div>
@@ -681,13 +681,13 @@
                 <div class="flex items-center gap-2 text-emerald-400 font-tech font-black text-sm uppercase">
                     <i class="fa-solid fa-diagram-project"></i> <span id="methodologyModalTitle">Detail Metodologi</span>
                 </div>
-                <button onclick="closeMethodologyModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeMethodologyModal()" class="text-slate-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-5 overflow-y-auto custom-scrollbar flex-grow text-slate-300 text-xs sm:text-sm leading-relaxed" id="methodologyModalBody"></div>
         </div>
     </div>
 
-    <!-- MODAL 5: CLIMATE MODAL -->
+    <!-- MODAL 5: CLIMATE & MONSOON PREDICTION MODAL -->
     <div id="climateModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
         <div class="bg-[#090e17] border border-cyan-500/30 rounded-2xl w-full max-w-lg relative shadow-2xl overflow-hidden flex flex-col font-sans">
             <div class="p-4 border-b border-cyan-900/50 flex justify-between items-center bg-[#0d1424]">
@@ -698,7 +698,13 @@
                         <p class="text-emerald-400 text-[10px] font-bold font-mono">Simulator Muson Pesisir Demak</p>
                     </div>
                 </div>
-                <button onclick="closeClimateModal()" class="text-slate-400 hover:text-cyan-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center gap-2">
+                    <!-- TOMBOL LINK KE SISTEM PREDIKSI ANGIN MUSON INDONESIA -->
+                    <button type="button" onclick="window.open('https://adikds.github.io/MONITORING-PREDIKSI-ANGIN-MUSON-INDONESIA/', '_blank')" class="bg-cyan-900/40 hover:bg-cyan-800/60 text-cyan-300 border border-cyan-500/50 h-8 w-8 rounded-lg flex items-center justify-center transition-all cursor-pointer shadow-md" title="Buka Sistem Prediksi & Analisis Dinamika Angin Muson Indonesia (Tab Baru)">
+                        <i class="fa-solid fa-cloud-sun-rain text-sm text-cyan-300"></i>
+                    </button>
+                    <button onclick="closeClimateModal()" class="text-slate-400 hover:text-cyan-400 text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             <div class="p-5 flex flex-col gap-4 font-mono text-xs">
                 <div class="border border-slate-700/60 rounded-xl p-4 text-center bg-[#0d131f]">
@@ -711,6 +717,11 @@
                     <div class="flex justify-between"><span>Kecepatan Arus:</span><span class="text-cyan-400 font-bold">0.15 – 0.37 m/s (Timur)</span></div>
                     <div class="flex justify-between"><span>Suhu Muka Laut (ENSO):</span><span class="text-orange-400 font-bold">Netral (+0.4°C)</span></div>
                 </div>
+                <div class="pt-2 border-t border-slate-800">
+                    <button type="button" onclick="window.open('https://adikds.github.io/MONITORING-PREDIKSI-ANGIN-MUSON-INDONESIA/', '_blank')" class="w-full bg-gradient-to-r from-cyan-900 to-blue-900 hover:from-cyan-800 hover:to-blue-800 text-cyan-200 border border-cyan-500/50 py-2.5 px-3 rounded-xl font-tech text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer">
+                        <i class="fa-solid fa-wind text-cyan-400"></i> <span>BUKA DASBOR ANGIN MUSON INDONESIA</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -718,7 +729,7 @@
     <!-- MODAL 6: BRANGKAS VAULT -->
     <div id="vaultModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
         <div id="vaultBox" class="bg-slate-900 border-2 border-blue-500 rounded-2xl w-full max-w-sm p-6 shadow-2xl relative font-mono">
-            <button type="button" onclick="closeVaultModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <button type="button" onclick="closeVaultModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
             <div class="text-center mb-4 mt-1">
                 <div class="w-12 h-12 bg-blue-950 border-2 border-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
                     <i class="fa-solid fa-vault text-xl text-blue-400"></i>
@@ -743,10 +754,10 @@
         </div>
     </div>
 
-    <!-- MODAL 7: PENELITI -->
+    <!-- MODAL 7: PENELITI & DEVELOPER -->
     <div id="creatorModal" class="fixed inset-0 z-[110] hidden bg-black/70 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-slate-900 border-2 border-emerald-500 rounded-2xl w-full max-w-md p-6 relative shadow-2xl font-sans text-xs">
-            <button onclick="closeCreatorModal()" class="absolute top-3 right-4 text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-slate-900 border-2 border-emerald-500 rounded-2xl w-full max-w-md p-6 relative shadow-2xl font-sans text-xs max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeCreatorModal()" class="absolute top-3 right-4 text-slate-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center pb-3 border-b border-slate-800 mb-3">
                 <h3 class="text-base font-black font-tech text-emerald-400 mt-1">YUSUF HADI NUGROHO</h3>
                 <p class="font-mono font-bold text-slate-300 mt-0.5">NIM: 21010124520008</p>
@@ -759,12 +770,16 @@
                 <i class="fa-brands fa-github text-base"></i> <span>REPOSITORY GITHUB</span>
             </a>
             <div class="pt-3 border-t border-slate-700 text-center font-mono">
-                <p class="text-orange-400 font-bold uppercase font-tech mb-1">UI/UX & AI Prompt Designer</p>
+                <p class="text-orange-400 font-bold uppercase font-tech mb-1"><i class="fa-solid fa-laptop-code"></i> UI/UX & AI Prompt Designer</p>
                 <p class="text-emerald-400 font-bold text-sm">MOHAMAD HARTADI</p>
                 <p class="text-[10px] text-slate-400 mb-2">Civil Engineer & AI System Developer</p>
-                <div class="flex justify-center items-center gap-3">
-                    <a href="https://newbieonline7.blogspot.com/" target="_blank" class="w-8 h-8 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-amber-500"><i class="fa-brands fa-blogger-b text-sm"></i></a>
-                    <a href="https://wa.me/6282231036047" target="_blank" class="w-8 h-8 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-green-500"><i class="fa-brands fa-whatsapp text-base"></i></a>
+                <div class="flex justify-center items-center gap-3 mb-2">
+                    <a href="https://www.facebook.com/m.hartadi" target="_blank" class="w-8 h-8 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-500 transition-colors" title="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                    <a href="https://newbieonline7.blogspot.com/" target="_blank" class="w-8 h-8 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-amber-500 hover:border-amber-500 transition-colors" title="Blog"><i class="fa-brands fa-blogger-b text-sm"></i></a>
+                    <a href="https://wa.me/6282231036047" target="_blank" class="w-8 h-8 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-green-500 hover:border-green-500 transition-colors" title="WhatsApp: 082231036047"><i class="fa-brands fa-whatsapp text-base"></i></a>
+                </div>
+                <div class="inline-block bg-slate-950 px-3 py-1 rounded text-[11px] text-slate-300 border border-slate-800">
+                    <i class="fa-solid fa-phone text-green-400 mr-1"></i> <a href="https://wa.me/6282231036047" target="_blank" class="hover:text-green-400">0822-3103-6047</a>
                 </div>
             </div>
         </div>
@@ -773,14 +788,14 @@
     <!-- MODAL 8: VOICE SETTINGS -->
     <div id="voiceSettingsModal" class="fixed inset-0 z-[10005] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-slate-900 border-2 border-emerald-500 rounded-2xl w-full max-w-sm p-5 shadow-2xl relative font-sans text-xs">
-            <button onclick="closeVoiceSettingsModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <button onclick="closeVoiceSettingsModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-emerald-400 text-sm font-black font-tech mb-2 uppercase"><i class="fa-solid fa-waveform-lines text-yellow-400"></i> Tema Suara SIRI/JARVIS</h3>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4">
                 <select id="voiceSelect" onchange="changeBotVoice()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none font-mono text-xs">
                     <option value="">Memuat daftar suara...</option>
                 </select>
             </div>
-            <button onclick="closeVoiceSettingsModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl uppercase font-tech text-xs">Terapkan Suara</button>
+            <button onclick="closeVoiceSettingsModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl uppercase font-tech text-xs cursor-pointer">Terapkan Suara</button>
         </div>
     </div>
 
@@ -800,9 +815,9 @@
                 </div>
             </div>
             <div class="flex items-center gap-1.5">
-                <button onclick="openVoiceSettingsModal()" class="text-emerald-400 hover:text-white bg-slate-900 border border-emerald-500/60 p-1.5 rounded-lg text-xs" title="Tema Suara"><i class="fa-solid fa-waveform-lines"></i></button>
-                <button type="button" onclick="toggleMute()" class="text-rose-400 hover:text-white bg-slate-900 border border-rose-500/60 p-1.5 rounded-lg text-xs" title="Mute Suara"><i id="chatMuteIcon" class="fa-solid fa-volume-xmark"></i></button>
-                <button onclick="toggleFloatingChatbot()" class="text-slate-400 hover:text-white p-1 ml-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="openVoiceSettingsModal()" class="text-emerald-400 hover:text-white bg-slate-900 border border-emerald-500/60 p-1.5 rounded-lg text-xs cursor-pointer" title="Tema Suara"><i class="fa-solid fa-waveform-lines"></i></button>
+                <button type="button" onclick="toggleMute()" class="text-rose-400 hover:text-white bg-slate-900 border border-rose-500/60 p-1.5 rounded-lg text-xs cursor-pointer" title="Mute Suara"><i id="chatMuteIcon" class="fa-solid fa-volume-xmark"></i></button>
+                <button onclick="toggleFloatingChatbot()" class="text-slate-400 hover:text-white p-1 ml-1 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
         </div>
 
@@ -818,20 +833,20 @@
 
         <!-- QUICK PROMPT SHORTCUTS -->
         <div class="p-2.5 bg-slate-900 border-t border-slate-800 flex gap-1.5 overflow-x-auto custom-scrollbar shrink-0 font-sans">
-            <button onclick="triggerChatShortcut('status_pesisir')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-emerald-950 text-emerald-400 text-xs rounded-lg border border-emerald-900 font-bold transition-all"><i class="fa-solid fa-chart-pie"></i> Status IKS</button>
-            <button onclick="triggerChatShortcut('my_aplikasi')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-orange-950 text-orange-400 text-xs rounded-lg border border-orange-900 font-bold transition-all"><i class="fa-solid fa-laptop-code"></i> My Aplikasi</button>
-            <button onclick="triggerChatShortcut('formula_matematik')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-blue-950 text-blue-400 text-xs rounded-lg border border-blue-900 font-bold transition-all"><i class="fa-solid fa-square-root-variable"></i> Formula Model</button>
-            <button onclick="triggerChatShortcut('data_adcp')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-cyan-950 text-cyan-400 text-xs rounded-lg border border-cyan-900 font-bold transition-all"><i class="fa-solid fa-water"></i> Data ADCP</button>
-            <button onclick="triggerChatShortcut('skenario_hybrid')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-purple-950 text-purple-400 text-xs rounded-lg border border-purple-900 font-bold transition-all"><i class="fa-solid fa-layer-group"></i> Skenario Hybrid</button>
-            <button onclick="triggerChatShortcut('peneliti')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-fuchsia-950 text-fuchsia-400 text-xs rounded-lg border border-fuchsia-900 font-bold transition-all"><i class="fa-solid fa-graduation-cap"></i> Peneliti</button>
+            <button onclick="triggerChatShortcut('status_pesisir')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-emerald-950 text-emerald-400 text-xs rounded-lg border border-emerald-900 font-bold transition-all cursor-pointer"><i class="fa-solid fa-chart-pie"></i> Status IKS</button>
+            <button onclick="triggerChatShortcut('my_aplikasi')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-orange-950 text-orange-400 text-xs rounded-lg border border-orange-900 font-bold transition-all cursor-pointer"><i class="fa-solid fa-laptop-code"></i> My Aplikasi</button>
+            <button onclick="triggerChatShortcut('formula_matematik')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-blue-950 text-blue-400 text-xs rounded-lg border border-blue-900 font-bold transition-all cursor-pointer"><i class="fa-solid fa-square-root-variable"></i> Formula Model</button>
+            <button onclick="triggerChatShortcut('data_adcp')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-cyan-950 text-cyan-400 text-xs rounded-lg border border-cyan-900 font-bold transition-all cursor-pointer"><i class="fa-solid fa-water"></i> Data ADCP</button>
+            <button onclick="triggerChatShortcut('skenario_hybrid')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-purple-950 text-purple-400 text-xs rounded-lg border border-purple-900 font-bold transition-all cursor-pointer"><i class="fa-solid fa-layer-group"></i> Skenario Hybrid</button>
+            <button onclick="triggerChatShortcut('peneliti')" class="whitespace-nowrap px-2.5 py-1 bg-slate-950 hover:bg-fuchsia-950 text-fuchsia-400 text-xs rounded-lg border border-fuchsia-900 font-bold transition-all cursor-pointer"><i class="fa-solid fa-graduation-cap"></i> Peneliti & Dev</button>
         </div>
 
         <div class="p-2.5 bg-slate-950 border-t border-emerald-900 flex gap-2 items-center">
-            <button id="micBtn" onclick="toggleDictation()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 px-3 py-2 rounded-lg text-sm transition-colors shrink-0" title="Dikte Suara">
+            <button id="micBtn" onclick="toggleDictation()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 px-3 py-2 rounded-lg text-sm transition-colors shrink-0 cursor-pointer" title="Dikte Suara">
                 <i class="fa-solid fa-microphone"></i>
             </button>
             <input type="text" id="chatInputField" placeholder="Tanya formula, data lapangan, skenario..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-emerald-500 font-sans" onkeydown="if(event.key === 'Enter') processUserChatMessage()">
-            <button onclick="processUserChatMessage()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-xs sm:text-sm font-black shadow-md shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
+            <button onclick="processUserChatMessage()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-xs sm:text-sm font-black shadow-md shrink-0 cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -839,19 +854,23 @@
     <div id="globalActionButtons" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] pointer-events-none">
         <div class="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pointer-events-auto relative w-max ml-auto mt-auto">
             <div id="floatingButtonsGroup" class="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 transition-all duration-500 ease-in-out transform origin-right translate-x-0 opacity-100 pr-[3.5rem] sm:pr-[4.5rem]">
-                <button type="button" onclick="location.reload()" class="bg-rose-600 hover:bg-rose-500 text-white border border-rose-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Refresh Dasbor">
+                <button type="button" onclick="location.reload()" class="bg-rose-600 hover:bg-rose-500 text-white border border-rose-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0 cursor-pointer" title="Refresh Dasbor">
                     <i class="fa-solid fa-rotate-right text-sm"></i>
                 </button>
-                <button type="button" onclick="openClimateModal()" class="bg-amber-600 hover:bg-amber-500 text-white border border-amber-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Prediksi Muson & Iklim">
+                <button type="button" onclick="openClimateModal()" class="bg-amber-600 hover:bg-amber-500 text-white border border-amber-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0 cursor-pointer" title="Prediksi Muson & Iklim">
                     <i class="fa-solid fa-cloud-sun-rain text-sm"></i>
                 </button>
-                <button type="button" onclick="openScenarioModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Bandingkan 4 Skenario">
+                <!-- TOMBOL SISTEM MONITORING SEISMIK & TSUNAMI DISAMPING TOMBOL IKLIM -->
+                <button type="button" onclick="window.open('https://adikds.github.io/SISTEM-MONITORING-SEISMIK-PERINGATAN-TSUNAMI/', '_blank')" class="bg-red-600 hover:bg-red-500 text-white border border-red-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.6)] flex items-center justify-center transition-transform hover:scale-110 shrink-0 cursor-pointer" title="Sistem Monitoring Seismik & Peringatan Tsunami">
+                    <i class="fa-solid fa-house-crack text-sm"></i>
+                </button>
+                <button type="button" onclick="openScenarioModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0 cursor-pointer" title="Bandingkan 4 Skenario">
                     <i class="fa-solid fa-code-compare text-sm"></i>
                 </button>
-                <button type="button" onclick="triggerAnalisisAlgoritma()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white border border-fuchsia-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Render Vektor & Plume Sedimen">
+                <button type="button" onclick="triggerAnalisisAlgoritma()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white border border-fuchsia-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0 cursor-pointer" title="Render Vektor & Plume Sedimen">
                     <i class="fa-solid fa-microchip text-sm"></i>
                 </button>
-                <button type="button" onclick="activateScreensaverManual(event)" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0" title="Screensaver 3D Earth">
+                <button type="button" onclick="activateScreensaverManual(event)" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-400 h-9 w-9 sm:h-11 sm:w-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 shrink-0 cursor-pointer" title="Screensaver 3D Earth">
                     <i class="fa-solid fa-desktop text-sm"></i>
                 </button>
                 <button type="button" onclick="toggleFloatingChatbot()" class="bg-gradient-to-tr from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white border border-emerald-300 h-11 w-11 sm:h-13 sm:w-13 rounded-full shadow-xl flex items-center justify-center transition-transform hover:scale-110 relative cursor-pointer shrink-0" title="JARVIS AI Chatbot">
@@ -859,7 +878,7 @@
                     <i id="botToggleIcon" class="fa-solid fa-robot text-base sm:text-lg"></i>
                 </button>
             </div>
-            <button type="button" onclick="toggleFloatingButtons()" class="absolute right-0 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 h-8 w-8 sm:h-9 sm:w-9 rounded-full shadow-md flex items-center justify-center transition-transform hover:scale-110 z-50 shrink-0">
+            <button type="button" onclick="toggleFloatingButtons()" class="absolute right-0 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 h-8 w-8 sm:h-9 sm:w-9 rounded-full shadow-md flex items-center justify-center transition-transform hover:scale-110 z-50 shrink-0 cursor-pointer">
                 <i id="toggleFloatingIcon" class="fa-solid fa-angles-right text-xs"></i>
             </button>
         </div>
@@ -902,9 +921,19 @@
             satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
         };
 
-        // INITIALIZE LEAFLET MAP
+        // INITIALIZE LEAFLET MAP & HIERARCHICAL PANES
         const map = L.map('map', { center: [-6.910, 110.510], zoom: 11, zoomControl: true });
         currentMapLayer = L.tileLayer(mapTileProviders.satellite).addTo(map);
+
+        // HIERARKI LAYER Z-INDEX: DAS (350) -> DSAS (380) -> OVERLAY VEKTOR (400) -> STASIUN/MARKERS (650)
+        map.createPane('dasPane');
+        map.getPane('dasPane').style.zIndex = 350;
+
+        map.createPane('dsasPane');
+        map.getPane('dsasPane').style.zIndex = 380;
+
+        map.createPane('stationsPane');
+        map.getPane('stationsPane').style.zIndex = 650;
         
         dynamicMapLayers = L.layerGroup().addTo(map);
         adcpLayerGroup = L.layerGroup().addTo(map);
@@ -912,7 +941,7 @@
         dsasLayerGroup = L.layerGroup().addTo(map);
         dasLayerGroup = L.layerGroup().addTo(map);
 
-        // DATA TITIK KAJIAN UTAMA
+        // ==================== 1. DATA TITIK KAJIAN UTAMA PESISIR (STATIONS PANE) ====================
         const lokasiKajian = [
             { name: "Muara Kali Jajar Baru / Morodemak", coords: [-6.824, 110.518], color: "#ef4444", desc: "Titik pengukuran sedimentasi muara dan gosong pasir (+0.1 s/d +0.4 m LLWL)." },
             { name: "Estuari Sungai Tuntang Lama", coords: [-6.885, 110.512], color: "#3b82f6", desc: "Aliran debit hulu membawa sedimen suspensi (SSC) dari DAS Tuntang." },
@@ -920,8 +949,13 @@
         ];
 
         lokasiKajian.forEach(stn => {
-            const marker = L.circleMarker(stn.coords, { radius: 8, fillColor: stn.color, color: "#ffffff", weight: 2, fillOpacity: 0.9 }).addTo(map);
-            marker.bindTooltip(`<div class="font-bold text-white text-xs"><i class="fa-solid fa-location-dot" style="color: ${stn.color}"></i> ${stn.name}</div>`, { direction: 'auto', className: 'custom-tooltip' });
+            const marker = L.circleMarker(stn.coords, { 
+                pane: 'stationsPane',
+                radius: 8, fillColor: stn.color, color: "#ffffff", weight: 2, fillOpacity: 0.9,
+                interactive: true, zIndexOffset: 1000
+            }).addTo(map);
+            
+            marker.bindTooltip(`<div class="font-bold text-white text-xs"><i class="fa-solid fa-location-dot" style="color: ${stn.color}"></i> ${stn.name}</div>`, { direction: 'top', sticky: true, className: 'custom-tooltip' });
             marker.on('click', () => {
                 appendBotReply(`<div class="bg-slate-900 border-l-4 p-3 rounded shadow-md text-xs font-sans mt-2" style="border-color: ${stn.color}">
                     <h4 class="font-bold text-white mb-1 uppercase" style="color: ${stn.color}"><i class="fa-solid fa-satellite-dish"></i> Detail Lokasi Kajian</h4>
@@ -932,7 +966,7 @@
             });
         });
 
-        // 1. DATA STASIUN ADCP & PASUT LAPANGAN (SESUAI PPT)
+        // ==================== 2. DATA STASIUN ADCP & PASUT LAPANGAN (STATIONS PANE) ====================
         const adcpPoints = [
             { name: "Stasiun ADCP Sayung (3.5 km lepas pantai)", coords: [-6.879, 110.477], speed: "0.04 - 0.86 m/s", depth: "2.4 - 4.8 m", waves: "0.1 - 1.1 m" },
             { name: "Stasiun AWLR Pasut Bonang (Desa Purworejo)", coords: [-6.840, 110.540], speed: "Pasut Verifikasi RMSE 7.99%", depth: "0.09 m selisih rata-rata", waves: "Dominan Barat Laut" }
@@ -940,11 +974,16 @@
 
         adcpPoints.forEach(p => {
             const m = L.marker(p.coords, {
+                pane: 'stationsPane',
+                zIndexOffset: 1200,
+                interactive: true,
                 icon: L.divIcon({
                     html: `<div class="bg-cyan-500 border-2 border-white text-slate-950 font-black rounded-full w-6 h-6 flex items-center justify-center shadow-lg text-[10px]"><i class="fa-solid fa-water"></i></div>`,
                     className: '', iconSize: [24, 24], iconAnchor: [12, 12]
                 })
             }).addTo(adcpLayerGroup);
+
+            m.bindTooltip(`<span class="font-mono text-[10px] text-white"><b>${p.name}</b></span>`, { direction: 'top', sticky: true, className: 'custom-tooltip' });
             m.bindPopup(`
                 <div class="bg-slate-950 text-white p-3 rounded-xl border border-cyan-500 font-mono text-xs">
                     <h4 class="font-bold text-cyan-400 mb-1 font-tech">${p.name}</h4>
@@ -955,30 +994,155 @@
             `);
         });
 
-        // 2. DATA POS HUJAN DAS TUNTANG & JRAGUNG (SESUAI PPT)
+        // ==================== 3. DATA POS HUJAN DAS TUNTANG & JRAGUNG (STATIONS PANE) ====================
         const posHujanList = [
-            { name: "Sta. Sumowono (75B)", coords: [-7.218, 110.315] },
-            { name: "Sta. Bawen (74)", coords: [-7.240, 110.420] },
-            { name: "Sta. Ambarawa (76)", coords: [-7.260, 110.400] },
-            { name: "Sta. Jragung (100)", coords: [-7.080, 110.510] },
-            { name: "Sta. Glapan (141)", coords: [-7.090, 110.580] },
-            { name: "Sta. Panorahan Kalanyar (122)", coords: [-6.910, 110.590] }
+            { name: "Sta. Sumowono (75B)", coords: [-7.218, 110.315], elev: "+980 m dpl" },
+            { name: "Sta. Bawen (74)", coords: [-7.240, 110.420], elev: "+720 m dpl" },
+            { name: "Sta. Ambarawa (76)", coords: [-7.260, 110.400], elev: "+510 m dpl" },
+            { name: "Sta. Jragung (100)", coords: [-7.080, 110.510], elev: "+145 m dpl" },
+            { name: "Sta. Glapan (141)", coords: [-7.090, 110.580], elev: "+35 m dpl" },
+            { name: "Sta. Panorahan Kalanyar (122)", coords: [-6.910, 110.590], elev: "+12 m dpl" }
         ];
 
         posHujanList.forEach(pos => {
-            const m = L.circleMarker(pos.coords, { radius: 5, fillColor: "#3b82f6", color: "#ffffff", weight: 1.5, fillOpacity: 0.9 }).addTo(posHujanLayerGroup);
-            m.bindTooltip(`<span class="font-mono text-[10px] text-white">Pos Hujan: ${pos.name}</span>`, { className: 'custom-tooltip' });
+            const m = L.circleMarker(pos.coords, { 
+                pane: 'stationsPane',
+                radius: 6, 
+                fillColor: "#38bdf8", 
+                color: "#ffffff", 
+                weight: 2, 
+                fillOpacity: 0.95,
+                interactive: true,
+                zIndexOffset: 1500
+            }).addTo(posHujanLayerGroup);
+
+            m.bindTooltip(`
+                <div class="font-mono text-[10px] text-white">
+                    <i class="fa-solid fa-cloud-rain text-cyan-400"></i> <b>${pos.name}</b><br>
+                    <span class="text-slate-300">Elevasi: ${pos.elev}</span>
+                </div>
+            `, { direction: 'top', sticky: true, className: 'custom-tooltip' });
+
+            m.bindPopup(`
+                <div class="bg-slate-950 text-white p-2.5 rounded-xl border border-blue-400 font-mono text-xs">
+                    <h4 class="font-bold text-blue-400 mb-1 font-tech"><i class="fa-solid fa-cloud-showers-heavy"></i> ${pos.name}</h4>
+                    <p class="text-[11px] text-slate-300"><b>Instansi:</b> BBWS Pemali Juana</p>
+                    <p class="text-[11px] text-slate-300"><b>Elevasi:</b> ${pos.elev}</p>
+                    <p class="text-[10px] text-slate-400 mt-1">Koordinat: ${pos.coords[0]}, ${pos.coords}</p>
+                </div>
+            `);
         });
 
-        // 3. LAYER DINAMIKA GARIS PANTAI DSAS HISTORIS
+        // ==================== 4. LAYER DINAMIKA GARIS PANTAI DSAS (DSAS PANE) ====================
         const shorelineHistorical = [
             [[-6.960, 110.470], [-6.930, 110.495], [-6.890, 110.510], [-6.820, 110.525]],
             [[-6.955, 110.473], [-6.925, 110.490], [-6.885, 110.505], [-6.818, 110.520]],
             [[-6.950, 110.478], [-6.920, 110.492], [-6.880, 110.512], [-6.815, 110.522]]
         ];
-        L.polyline(shorelineHistorical[0], { color: '#ef4444', weight: 2, dashArray: '4,4' }).addTo(dsasLayerGroup).bindTooltip("Garis Pantai 1994 (Baseline)", { className: 'custom-tooltip' });
-        L.polyline(shorelineHistorical, { color: '#f59e0b', weight: 2, dashArray: '4,4' }).addTo(dsasLayerGroup).bindTooltip("Garis Pantai 2013 (Abrasi Kritis)", { className: 'custom-tooltip' });
-        L.polyline(shorelineHistorical, { color: '#10b981', weight: 3 }).addTo(dsasLayerGroup).bindTooltip("Garis Pantai 2023 (Kondisi Terkini)", { className: 'custom-tooltip' });
+        L.polyline(shorelineHistorical[0], { pane: 'dsasPane', color: '#ef4444', weight: 2, dashArray: '4,4' }).addTo(dsasLayerGroup).bindTooltip("Garis Pantai 1994 (Baseline)", { className: 'custom-tooltip' });
+        L.polyline(shorelineHistorical, { pane: 'dsasPane', color: '#f59e0b', weight: 2, dashArray: '4,4' }).addTo(dsasLayerGroup).bindTooltip("Garis Pantai 2013 (Abrasi Kritis)", { className: 'custom-tooltip' });
+        L.polyline(shorelineHistorical, { pane: 'dsasPane', color: '#10b981', weight: 3 }).addTo(dsasLayerGroup).bindTooltip("Garis Pantai 2023 (Kondisi Terkini)", { className: 'custom-tooltip' });
+
+        // ==================== 5. LAYER POLIGON DAS BEBAS TUMPANG TINDIH (DAS PANE) ====================
+        // Sinkronisasi Sesuai Peta Wilayah Sungai Jratunseluna (PUPR) Kode WS: 02.16.A3
+        const dasPolygonsData = [
+            {
+                code: "005", name: "DAS Garang", area: "212.0 km²", color: "#ef4444",
+                coords: [
+                    [-6.950, 110.380], [-6.950, 110.425], [-7.020, 110.435], [-7.070, 110.430], 
+                    [-7.140, 110.410], [-7.180, 110.350], [-7.120, 110.320], [-7.020, 110.340], 
+                    [-6.950, 110.380]
+                ],
+                desc: "Kota Semarang hulu lereng Ungaran menuju Banjir Kanal Barat."
+            },
+            {
+                code: "009", name: "DAS Babon", area: "115.3 km²", color: "#6366f1",
+                coords: [
+                    [-6.945, 110.440], [-6.945, 110.475], [-7.000, 110.480], [-7.060, 110.475], 
+                    [-7.140, 110.450], [-7.140, 110.410], [-7.070, 110.430], [-7.020, 110.435], 
+                    [-6.950, 110.425], [-6.945, 110.440]
+                ],
+                desc: "Batas Semarang Timur – Sayung Barat. Mengalir melintasi Mranggen dan Genuk."
+            },
+            {
+                code: "012", name: "DAS Jragung", area: "187.2 km²", color: "#10b981",
+                coords: [
+                    [-6.930, 110.475], [-6.925, 110.505], [-6.990, 110.515], [-7.080, 110.510], 
+                    [-7.160, 110.470], [-7.140, 110.450], [-7.060, 110.475], [-7.000, 110.480], 
+                    [-6.945, 110.475], [-6.930, 110.475]
+                ],
+                desc: "Lereng Gunung Ungaran timur melalui Karangawen menuju muara pesisir Sayung."
+            },
+            {
+                code: "013", name: "DAS Tuntang", area: "825.4 km²", color: "#3b82f6",
+                coords: [
+                    [-6.885, 110.512], [-6.920, 110.540], [-6.980, 110.560], [-7.050, 110.580], 
+                    [-7.150, 110.600], [-7.240, 110.550], [-7.280, 110.480], [-7.280, 110.400], 
+                    [-7.240, 110.350], [-7.180, 110.400], [-7.160, 110.470], [-7.080, 110.510], 
+                    [-6.990, 110.515], [-6.925, 110.505], [-6.885, 110.512]
+                ],
+                desc: "Hulu Rawa Pening/Merbabu menuju muara Sayung & Tuntang. Inflow utama debit sedimen suspensi (SSC) ke perairan Demak."
+            },
+            {
+                code: "015", name: "DAS Jajar (Kali Jajar Baru)", area: "148.6 km²", color: "#f59e0b",
+                coords: [
+                    [-6.824, 110.518], [-6.840, 110.560], [-6.890, 110.640], [-6.970, 110.650], 
+                    [-7.050, 110.580], [-6.980, 110.560], [-6.920, 110.540], [-6.885, 110.512], 
+                    [-6.824, 110.518]
+                ],
+                desc: "Melintasi Demak Kota menuju Muara Morodemak / Kali Jajar Baru. Titik pengukuran sedimentasi muara dan gosong pasir."
+            },
+            {
+                code: "019", name: "DAS Serang-Lusi", area: "3180.0 km²", color: "#a855f7",
+                coords: [
+                    [-6.750, 110.600], [-6.824, 110.518], [-6.840, 110.560], [-6.890, 110.640], 
+                    [-6.970, 110.650], [-7.050, 110.580], [-7.150, 110.600], [-7.240, 110.550], 
+                    [-7.280, 110.480], [-7.250, 110.850], [-7.150, 111.150], [-7.050, 111.350], 
+                    [-7.000, 111.100], [-6.900, 110.900], [-6.820, 110.750], [-6.750, 110.600]
+                ],
+                desc: "Cakupan Waduk Kedung Ombo, Kali Lusi, Grobogan, Blora hingga muara Kedung Malang Demak/Jepara."
+            },
+            {
+                code: "043", name: "DAS Juwana", area: "1280.0 km²", color: "#14b8a6",
+                coords: [
+                    [-6.750, 110.600], [-6.820, 110.750], [-6.900, 110.900], [-7.000, 111.100], 
+                    [-7.050, 111.350], [-6.950, 111.300], [-6.700, 111.180], [-6.650, 111.050], 
+                    [-6.680, 110.850], [-6.750, 110.600]
+                ],
+                desc: "Wilayah lereng Muria timur, Pati, dan Kudus utara menuju muara pelabuhan Juwana."
+            }
+        ];
+
+        dasPolygonsData.forEach(das => {
+            const poly = L.polygon(das.coords, {
+                pane: 'dasPane',
+                color: das.color,
+                weight: 2,
+                opacity: 0.85,
+                fillColor: das.color,
+                fillOpacity: 0.20,
+                dashArray: '5, 5',
+                interactive: true
+            }).addTo(dasLayerGroup);
+
+            poly.bindTooltip(`
+                <div class="font-mono text-xs text-white">
+                    <b style="color: ${das.color}">[${das.code}] ${das.name}</b><br>
+                    <span class="text-[10px] text-slate-300">Estimasi Luas DTA: ${das.area}</span>
+                </div>
+            `, { sticky: true, className: 'custom-tooltip' });
+
+            poly.bindPopup(`
+                <div class="bg-slate-950 text-white p-3 rounded-xl border font-mono text-xs" style="border-color: ${das.color}">
+                    <div class="flex items-center gap-1.5 font-bold mb-1 font-tech uppercase" style="color: ${das.color}">
+                        <i class="fa-solid fa-draw-polygon"></i> <span>${das.name} (${das.code})</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 mb-1"><b>Wilayah Sungai:</b> WS Jratunseluna (02.16.A3)</p>
+                    <p class="text-[11px] text-slate-300 mb-1"><b>Luas DTA:</b> ${das.area}</p>
+                    <p class="text-[11px] text-slate-400 leading-relaxed border-t border-slate-800 pt-1.5 mt-1.5">${das.desc}</p>
+                </div>
+            `);
+        });
 
         function toggleGisLayer(layerKey) {
             let grp, chk, btn;
@@ -1014,41 +1178,15 @@
             document.getElementById(`mapBtn-${style}`).className = "px-2 py-1 rounded bg-emerald-600 text-white font-bold cursor-pointer shadow-inner";
         }
 
-        // FULLSCREEN HANDLER FIX: memindahkan elemen chatbot ke dalam wrapper peta saat fullscreen
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-        function handleFullscreenChange() {
-            const mapWrapper = document.getElementById('mapFullscreenWrapper');
-            const chatPanel = document.getElementById('floatingChatPanel');
-            const actionButtons = document.getElementById('globalActionButtons');
-            const icon = document.getElementById('fullscreenIcon');
-
-            if (document.fullscreenElement === mapWrapper || document.webkitFullscreenElement === mapWrapper) {
-                mapWrapper.appendChild(chatPanel);
-                mapWrapper.appendChild(actionButtons);
-                icon.className = "fa-solid fa-compress text-xs";
-            } else {
-                document.body.appendChild(chatPanel);
-                document.body.appendChild(actionButtons);
-                icon.className = "fa-solid fa-expand text-xs";
-            }
-        }
-
         function toggleMapFullscreen() {
             const mapWrapper = document.getElementById('mapFullscreenWrapper');
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (mapWrapper.requestFullscreen) {
-                    mapWrapper.requestFullscreen();
-                } else if (mapWrapper.webkitRequestFullscreen) {
-                    mapWrapper.webkitRequestFullscreen();
-                }
+            const icon = document.getElementById('fullscreenIcon');
+            if (!document.fullscreenElement) {
+                if (mapWrapper.requestFullscreen) mapWrapper.requestFullscreen();
+                icon.className = "fa-solid fa-compress text-xs";
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
+                icon.className = "fa-solid fa-expand text-xs";
             }
         }
 
@@ -1292,12 +1430,12 @@
             document.getElementById('chartContainer-hydrograph').classList.add('hidden');
             document.getElementById('chartContainer-dsas').classList.add('hidden');
 
-            document.getElementById('tabBtn-projection').className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all";
-            document.getElementById('tabBtn-hydrograph').className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all";
-            document.getElementById('tabBtn-dsas').className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all";
+            document.getElementById('tabBtn-projection').className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer";
+            document.getElementById('tabBtn-hydrograph').className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer";
+            document.getElementById('tabBtn-dsas').className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer";
 
             document.getElementById(`chartContainer-${tab}`).classList.remove('hidden');
-            document.getElementById(`tabBtn-${tab}`).className = "px-2.5 py-1 rounded bg-emerald-700 text-white font-bold transition-all";
+            document.getElementById(`tabBtn-${tab}`).className = "px-2.5 py-1 rounded bg-emerald-700 text-white font-bold transition-all cursor-pointer";
         }
 
         // ==================== RENDERING SPASIAL-DINAMIS ====================
@@ -1646,12 +1784,27 @@
                     </div>`;
                     ttsOutput = "Skenario hybrid merupakan rekomendasi optimal disertasi untuk menjaga kestabilan pesisir Demak.";
                 } else if(action === 'peneliti') {
-                    reply = `<div class="bg-slate-900 border border-emerald-500 rounded p-2.5 text-xs text-center font-mono">
-                        <p class="font-bold text-emerald-400">Yusuf Hadi Nugroho (NIM 21010124520008)</p>
-                        <p class="text-[10px] text-slate-400">Program Doktor Teknik Sipil UNDIP</p>
-                        <p class="text-orange-400 font-bold mt-1.5">UI/UX: Mohamad Hartadi (Adi)</p>
+                    reply = `<div class="bg-slate-900 border border-emerald-500 rounded-xl p-3 text-xs font-mono text-center space-y-2">
+                        <div class="border-b border-slate-800 pb-2">
+                            <p class="font-bold text-emerald-400 text-sm">Yusuf Hadi Nugroho</p>
+                            <p class="text-[11px] text-slate-300">NIM: 21010124520008</p>
+                            <p class="text-[10px] text-slate-400">Program Doktor Ilmu Teknik Sipil - UNDIP</p>
+                        </div>
+                        <div class="pt-1">
+                            <p class="text-orange-400 font-bold uppercase font-tech text-[11px]"><i class="fa-solid fa-laptop-code"></i> UI/UX & AI Prompt Designer</p>
+                            <p class="text-white font-bold text-xs mt-0.5">MOHAMAD HARTADI</p>
+                            <p class="text-[10px] text-slate-400 mb-2">Civil Engineer & AI System Developer</p>
+                            <div class="flex justify-center items-center gap-3 my-2">
+                                <a href="https://www.facebook.com/m.hartadi" target="_blank" class="w-7 h-7 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-blue-400 hover:border-blue-400 transition-colors" title="Facebook"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                                <a href="https://newbieonline7.blogspot.com/" target="_blank" class="w-7 h-7 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:border-amber-400 transition-colors" title="Blog"><i class="fa-brands fa-blogger-b text-xs"></i></a>
+                                <a href="https://wa.me/6282231036047" target="_blank" class="w-7 h-7 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-green-400 hover:border-green-400 transition-colors" title="WhatsApp"><i class="fa-brands fa-whatsapp text-sm"></i></a>
+                            </div>
+                            <div class="bg-slate-950 px-2.5 py-1 rounded text-[10px] text-slate-300 border border-slate-800 inline-block">
+                                <i class="fa-solid fa-phone text-green-400 mr-1"></i> <a href="https://wa.me/6282231036047" target="_blank" class="hover:text-green-400">0822-3103-6047</a>
+                            </div>
+                        </div>
                     </div>`;
-                    ttsOutput = "Aplikasi ini disusun oleh peneliti Yusuf Hadi Nugroho di bawah bimbingan Program Doktor Teknik Sipil UNDIP.";
+                    ttsOutput = "Aplikasi ini disusun oleh peneliti utama Yusuf Hadi Nugroho di bawah bimbingan Program Doktor Teknik Sipil UNDIP, dan antarmuka UI UX dikembangkan oleh Mohamad Hartadi.";
                 }
                 appendBotReply(reply, ttsOutput);
             }, 600);
@@ -1675,6 +1828,8 @@
                 triggerChatShortcut('skenario_hybrid'); return;
             } else if(msgLower.includes('aplikasi') || msgLower.includes('portofolio') || msgLower.includes('karya') || msgLower.includes('buatan')) {
                 triggerChatShortcut('my_aplikasi'); return;
+            } else if(msgLower.includes('peneliti') || msgLower.includes('programmer') || msgLower.includes('pembuat') || msgLower.includes('hartadi') || msgLower.includes('yusuf')) {
+                triggerChatShortcut('peneliti'); return;
             }
 
             try {
